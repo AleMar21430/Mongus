@@ -147,7 +147,7 @@
     <ClInclude Include="include\frontend\studio.h" />
     <QtMoc Include="include\threading.h" />
     <QtMoc Include="include\settings.h" />
-    <ClInclude Include="include\frontend\movie.h" />
+    <QtMoc Include="include\frontend\movie.h" />
     <ClInclude Include="include\include.h" />
     <QtMoc Include="include\main window.h" />
     <QtMoc Include="include\qt core.h" />

@@ -6,19 +6,16 @@ App::App(int argc, char* argv[]) :
 {
 	loadStyle();
 	loadSettings();
-
+	mongo_thread = new Mongo_Thread(&settings);
 	window = new Main_Window(this);
 	load();
 }
 
 void App::load() {
 	error_image = QPixmap("./res/Error.png");
-
 	async_requests = {
 		{ Async_Type::UNKNOWN, 0 }
 	};
-
-	mongo_driver = mongo::instance();
 }
 
 void App::loadStyle() {
@@ -54,10 +51,7 @@ void App::loadSettings() {
 	settings["db_url"] = db_url;
 	settings["username"] = username;
 	settings["password"] = password;
-
 	log->append("Initialized");
-	//log->append(QString::fromStdString("Initialized with database settings: [ ") + settings["db_url"] + " ]");
-	//log->append(QString::fromStdString("Using credentials: [ ") + settings["username"] + " | " + settings["password"] + " ]");
 }
 
 int App::cleanup() {
@@ -73,7 +67,10 @@ Main_Window::Main_Window(App* i_app) :
 {
 	settings = new Settings(app);
 
+	Movie_Listings* movie_listings = new Movie_Listings();
+
 	tabs = new Tabs();
+	tabs->addTab(movie_listings, "Movie Listings");
 	tabs->addTab(settings, "Settings");
 
 	Splitter* splitter = new Splitter();

@@ -54,11 +54,11 @@ public:
 	~Async_Thread() {};
 	void run() override;
 signals:
-	void result(const uint32_t& i_request_id, const QString& i_data);
+	void result(const uint32_t& i_request_id, const string& i_data);
 	void logMsg(const QString& i_message);
 };
 
-class Database_Thread : public QThread {
+class Mongo_Thread : public QThread {
 	Q_OBJECT
 public:
 	QQueue<Mongo_Query> work_queue;
@@ -70,14 +70,14 @@ public:
 	mongo::client mongo_connection;
 	mongo::database database;
 
-	Database_Thread(string* i_database_path = nullptr, unordered_map<QString, QString>* i_settings = nullptr) :
+	Mongo_Thread(unordered_map<QString, QString>* i_settings = nullptr) :
 		QThread(),
 		settings(i_settings)
 	{
 		mongo_connection = mongo::client(mongo::uri((*settings)["db_url"].toStdString()));
 		database = mongo_connection["Proyecto_1"];
 	};
-	~Database_Thread() {
+	~Mongo_Thread() {
 	};
 
 	void run() override;
@@ -86,6 +86,6 @@ public:
 	void queueWork(const Mongo_Query& i_work);
 	void cancelWork();
 signals:
-	void result(const uint32_t& i_request_id, const QString& i_data);
+	void result(const uint32_t& i_request_id, const json& i_data);
 	void logMsg(const QString& i_message);
 };
