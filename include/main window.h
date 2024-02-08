@@ -19,6 +19,7 @@ struct App : QApplication {
 	Text_Stream* log;
 
 	Mongo_Thread* mongo_thread;
+	uint32_t mongo_request;
 
 	unordered_map<QString, QString> settings;
 	unordered_map<Async_Type, uint32_t> async_requests;
@@ -40,8 +41,9 @@ public:
 	App* app;
 	Tabs* tabs;
 
-	Main_Window(App* i_app = nullptr);
+	Main_Window(App* app = nullptr);
 
+	void changeView(const int& row);
 public slots:
-	void logMessage(const QString& i_message);
+	void logMessage(const QString& message);
 };

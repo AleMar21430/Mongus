@@ -10,6 +10,10 @@ enum struct Async_Type {
 };
 struct Mongo_Query;
 class Mongo_Thread;
+enum struct Mongo_Type {
+	UNKNOWN,
+	LISTINGS
+};
 
 struct Async_Query {
 	QString query;
@@ -28,16 +32,17 @@ struct Async_Query {
 };
 
 struct Mongo_Query {
-	QString query;
+	unordered_map<string, string> query;
+	Mongo_Type type;
 	uint32_t request_id;
 
-	string collection;
-
 	Mongo_Query(
-		const QString& query,
+		const unordered_map<string, string>& query,
+		const Mongo_Type& type,
 		const uint32_t& request_id
 	) :
 		query(query),
+		type(type),
 		request_id(request_id)
 	{}
 };
@@ -47,15 +52,15 @@ class Async_Thread : public QThread {
 public:
 	Async_Query work;
 
-	Async_Thread(const Async_Query& i_work) :
+	Async_Thread(const Async_Query& work) :
 		QThread(),
-		work(i_work)
+		work(work)
 	{};
 	~Async_Thread() {};
 	void run() override;
 signals:
-	void result(const uint32_t& i_request_id, const string& i_data);
-	void logMsg(const QString& i_message);
+	void result(const Async_Query& query, const string& data);
+	void logMsg(const QString& message);
 };
 
 class Mongo_Thread : public QThread {
@@ -64,15 +69,14 @@ public:
 	QQueue<Mongo_Query> work_queue;
 	QWaitCondition condition;
 	QMutex semaphore;
-	// Uniforms
-	unordered_map<QString, QString>* settings;
 
+	unordered_map<QString, QString>* settings;
 	mongo::client mongo_connection;
 	mongo::database database;
 
-	Mongo_Thread(unordered_map<QString, QString>* i_settings = nullptr) :
+	Mongo_Thread(unordered_map<QString, QString>* settings = nullptr) :
 		QThread(),
-		settings(i_settings)
+		settings(settings)
 	{
 		mongo_connection = mongo::client(mongo::uri((*settings)["db_url"].toStdString()));
 		database = mongo_connection["Proyecto_1"];
@@ -82,10 +86,10 @@ public:
 
 	void run() override;
 
-	void processWork(const Mongo_Query& i_work);
-	void queueWork(const Mongo_Query& i_work);
+	void processWork(const Mongo_Query& work);
+	void queueWork(const Mongo_Query& work);
 	void cancelWork();
 signals:
-	void result(const uint32_t& i_request_id, const json& i_data);
-	void logMsg(const QString& i_message);
+	void result(const Mongo_Query& query, const json& data);
+	void logMsg(const QString&_message);
 };

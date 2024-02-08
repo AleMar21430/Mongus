@@ -12,4 +12,6 @@ public:
 	App* app;
 
 	Movie_Listings_Tab(App* i_app);
+
+	void activate();
 };

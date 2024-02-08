@@ -4,11 +4,10 @@ App::App(int argc, char* argv[]) :
 	QApplication(argc, argv),
 	log(new Text_Stream())
 {
-	loadStyle();
 	loadSettings();
-	mongo_thread = new Mongo_Thread(&settings);
-	window = new Main_Window(this);
+	loadStyle();
 	load();
+	window = new Main_Window(this);
 }
 
 void App::load() {
@@ -16,6 +15,9 @@ void App::load() {
 	async_requests = {
 		{ Async_Type::UNKNOWN, 0 }
 	};
+	mongo_request = 0;
+	mongo_thread = new Mongo_Thread(&settings);
+	mongo_thread->start();
 }
 
 void App::loadStyle() {
@@ -62,8 +64,8 @@ int App::cleanup() {
 	return 0;
 }
 
-Main_Window::Main_Window(App* i_app) :
-	app(i_app)
+Main_Window::Main_Window(App* app) :
+	app(app)
 {
 	Movie_Listings_Tab* movie_listings_tab = new Movie_Listings_Tab(app);
 	Statistics_Tab* statistics_tab = new Statistics_Tab(app);
@@ -73,10 +75,13 @@ Main_Window::Main_Window(App* i_app) :
 	Movie_Tab* movie_tab = new Movie_Tab(app);
 	User_Tab* user_tab = new User_Tab(app);
 
+	movie_listings_tab->activate();
+
 	tabs = new Tabs();
 	tabs->addTab(movie_listings_tab, "Movie Listings");
 	tabs->addTab(showings_tab, "Movie Showings");
 	tabs->addTab(settings_tab, "Settings");
+	connect(tabs, &Tabs::currentChanged, [this](int index) { changeView(index); });
 
 	Splitter* splitter = new Splitter(true);
 	splitter->addWidget(tabs);
@@ -87,10 +92,16 @@ Main_Window::Main_Window(App* i_app) :
 	showMaximized();
 }
 
-void Main_Window::logMessage(const QString& i_message) {
+void Main_Window::changeView(const int& row) {
+	if (row == 0) {
+		dynamic_cast<Movie_Listings_Tab*>(tabs->currentWidget())->activate();
+	}
+}
+
+void Main_Window::logMessage(const QString& message) {
 	if (QThread::currentThread() != QApplication::instance()->thread()) {
-		QMetaObject::invokeMethod(this, "logMessage", Qt::QueuedConnection, Q_ARG(QString, i_message));
+		QMetaObject::invokeMethod(this, "logMessage", Qt::QueuedConnection, Q_ARG(QString, message));
 		return;
 	}
-	app->log->append(i_message);
+	app->log->append(message);
 }
