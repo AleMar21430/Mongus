@@ -93,6 +93,8 @@ class Text_Stream : public QTextBrowser {
 	Q_OBJECT
 public:
 	Text_Stream(QWidget* i_parent = nullptr);
+
+	void append(const QString& text);
 };
 
 struct Tree_Item : QTreeWidgetItem {

@@ -373,3 +373,8 @@ Text_Stream::Text_Stream(QWidget* i_parent) : QTextBrowser(i_parent) {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	setTabStopDistance(38);
 }
+
+void Text_Stream::append(const QString& text) {
+	cerr << text.toStdString() << endl;
+	QTextBrowser::append(text);
+}
