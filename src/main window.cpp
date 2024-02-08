@@ -23,10 +23,25 @@ void App::init() {
 	headers = cpr::Header {
 	};
 
-	//mongo::instance inst{};
-	//mongo::client conn{ mongo::uri{ settings["db_url"].toStdString() }};
-	//mongo::database db = conn["Proyecto1"];
-	//mongo::collection coll = db["mycollection"];
+	mongo::instance inst = mongo::instance();
+	try {
+		mongo::client conn = mongo::client(mongo::uri(settings["db_url"].toStdString()));
+		mongo::database db = conn["Proyecto_1"];
+		mongo::collection collection = db["users"];
+		mongo::cursor cursor = collection.find({});
+		json resultArray;
+		for (auto&& doc : cursor) {
+			cerr << bsoncxx::to_json(doc);
+
+			json docJson = json::parse(bsoncxx::to_json(doc));
+			resultArray.push_back(docJson);
+		}
+
+		log->append(QString::fromStdString(resultArray.dump()));
+	}
+	catch (const std::exception& error) {
+		log->append(QString::fromStdString("MongoDB Error: ") + error.what());
+	}
 }
 
 void App::loadStyle() {
@@ -68,11 +83,12 @@ void App::loadSettings() {
 	//log->append(QString::fromStdString("Using credentials: [ ") + settings["username"] + " | " + settings["password"] + " ]");
 }
 
-void App::cleanup() {
+int App::cleanup() {
 	QSettings("Peko", "Database").setValue("db_url", settings["db_url"]);
 	QSettings("Peko", "Database").setValue("username", settings["username"]);
 	QSettings("Peko", "Database").setValue("password", settings["password"]);
 	cerr << "Exit";
+	return 0;
 }
 
 Main_Window::Main_Window(App* i_app) :

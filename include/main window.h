@@ -25,7 +25,7 @@ struct App : QApplication {
 	void loadStyle();
 	void loadSettings();
 
-	void cleanup();
+	int cleanup();
 };
 
 class Main_Window : public QMainWindow {
