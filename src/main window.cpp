@@ -65,13 +65,12 @@ int App::cleanup() {
 Main_Window::Main_Window(App* i_app) :
 	app(i_app)
 {
-	settings = new Settings(app);
-
-	Movie_Listings* movie_listings = new Movie_Listings();
+	settings_tab = new Settings(app);
+	Movie_Listings* movie_listings_tab = new Movie_Listings(app);
 
 	tabs = new Tabs();
-	tabs->addTab(movie_listings, "Movie Listings");
-	tabs->addTab(settings, "Settings");
+	tabs->addTab(movie_listings_tab, "Movie Listings");
+	tabs->addTab(settings_tab, "Settings");
 
 	Splitter* splitter = new Splitter();
 	splitter->addWidget(tabs);

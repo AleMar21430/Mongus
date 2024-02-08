@@ -40,7 +40,7 @@ public:
 	Tabs* tabs;
 
 	// Tabs
-	Settings* settings;
+	Settings* settings_tab;
 
 	Main_Window(App* i_app = nullptr);
 
