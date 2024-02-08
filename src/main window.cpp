@@ -31,8 +31,6 @@ void App::init() {
 		mongo::cursor cursor = collection.find({});
 		json resultArray;
 		for (auto&& doc : cursor) {
-			cerr << bsoncxx::to_json(doc);
-
 			json docJson = json::parse(bsoncxx::to_json(doc));
 			resultArray.push_back(docJson);
 		}
