@@ -33,11 +33,3 @@ namespace fs = filesystem;
 namespace mongo = mongocxx;
 
 using json = nlohmann::json;
-
-enum struct Remote_Request_Type {
-	UNKNOWN
-};
-
-enum struct Local_Request_Type {
-	UNKNOWN
-};

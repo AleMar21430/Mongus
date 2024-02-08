@@ -8,38 +8,17 @@ App::App(int argc, char* argv[]) :
 	loadSettings();
 
 	window = new Main_Window(this);
-	init();
+	load();
 }
 
-void App::init() {
+void App::load() {
 	error_image = QPixmap("./res/Error.png");
 
-	remote_requests = {
-		{ Remote_Request_Type::UNKNOWN, 0 }
-	};
-	local_requests = {
-		{ Local_Request_Type::UNKNOWN, 0 }
-	};
-	headers = cpr::Header {
+	async_requests = {
+		{ Async_Type::UNKNOWN, 0 }
 	};
 
-	mongo::instance inst = mongo::instance();
-	try {
-		mongo::client conn = mongo::client(mongo::uri(settings["db_url"].toStdString()));
-		mongo::database db = conn["Proyecto_1"];
-		mongo::collection collection = db["users"];
-		mongo::cursor cursor = collection.find({});
-		json resultArray;
-		for (auto&& doc : cursor) {
-			json docJson = json::parse(bsoncxx::to_json(doc));
-			resultArray.push_back(docJson);
-		}
-
-		log->append(QString::fromStdString(resultArray.dump()));
-	}
-	catch (const std::exception& error) {
-		log->append(QString::fromStdString("MongoDB Error: ") + error.what());
-	}
+	mongo_driver = mongo::instance();
 }
 
 void App::loadStyle() {

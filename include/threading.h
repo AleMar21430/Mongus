@@ -3,19 +3,22 @@
 #include "include.h"
 #include "qt core.h"
 
-struct Remote_Query;
-class Remote_Thread;
-struct Local_Query;
-class Local_Thread;
+struct Async_Query;
+class Async_Thread;
+enum struct Async_Type {
+	UNKNOWN
+};
+struct Mongo_Query;
+class Mongo_Thread;
 
-struct Remote_Query {
+struct Async_Query {
 	QString query;
-	Remote_Request_Type type;
+	Async_Type type;
 	uint32_t request_id;
 
-	Remote_Query(
+	Async_Query(
 		const QString& query,
-		const Remote_Request_Type& type,
+		const Async_Type& type,
 		const uint32_t& request_id
 	) :
 		query(query),
@@ -24,50 +27,65 @@ struct Remote_Query {
 	{}
 };
 
-struct Local_Query {
+struct Mongo_Query {
 	QString query;
-	Local_Request_Type type;
 	uint32_t request_id;
 
-	Local_Query(
+	string collection;
+
+	Mongo_Query(
 		const QString& query,
-		const Local_Request_Type& type,
 		const uint32_t& request_id
 	) :
 		query(query),
-		type(type),
 		request_id(request_id)
 	{}
 };
 
-class Remote_Thread : public QThread {
+class Async_Thread : public QThread {
 	Q_OBJECT
 public:
-	Remote_Query work;
+	Async_Query work;
 
-	Remote_Thread(const Remote_Query& i_work) :
+	Async_Thread(const Async_Query& i_work) :
 		QThread(),
 		work(i_work)
 	{};
-	~Remote_Thread() {};
+	~Async_Thread() {};
 	void run() override;
 signals:
-	void result(const uint32_t& i_request_id, const QString& i_data, const int& i_index);
+	void result(const uint32_t& i_request_id, const QString& i_data);
 	void logMsg(const QString& i_message);
 };
 
-class Local_Thread : public QThread {
+class Database_Thread : public QThread {
 	Q_OBJECT
 public:
-	Local_Query work;
+	QQueue<Mongo_Query> work_queue;
+	QWaitCondition condition;
+	QMutex semaphore;
+	// Uniforms
+	unordered_map<QString, QString>* settings;
 
-	Local_Thread(const Local_Query& i_work) :
+	mongo::client mongo_connection;
+	mongo::database database;
+
+	Database_Thread(string* i_database_path = nullptr, unordered_map<QString, QString>* i_settings = nullptr) :
 		QThread(),
-		work(i_work)
-	{};
-	~Local_Thread() {};
+		settings(i_settings)
+	{
+		mongo_connection = mongo::client(mongo::uri((*settings)["db_url"].toStdString()));
+		database = mongo_connection["Proyecto_1"];
+	};
+	~Database_Thread() {
+	};
+
 	void run() override;
+
+	void processWork(const Mongo_Query& i_work);
+	void queueWork(const Mongo_Query& i_work);
+	void cancelWork();
 signals:
-	void result(const uint32_t& i_request_id, const QString& i_data, const int& i_index);
+	void result(const uint32_t& i_request_id, const QString& i_data);
 	void logMsg(const QString& i_message);
 };

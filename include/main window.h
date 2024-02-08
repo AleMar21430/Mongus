@@ -11,17 +11,15 @@ struct App : QApplication {
 	Main_Window* window;
 	Text_Stream* log;
 
-	cpr::Header headers;
 	unordered_map<QString, QString> settings;
-
-	unordered_map<Remote_Request_Type, uint32_t> remote_requests;
-	unordered_map<Local_Request_Type, uint32_t> local_requests;
+	unordered_map<Async_Type, uint32_t> async_requests;
+	mongo::instance mongo_driver;
 
 	QPixmap error_image;
 
 	App(int argc, char* argv[]);
 
-	void init();
+	void load();
 	void loadStyle();
 	void loadSettings();
 
