@@ -2,14 +2,15 @@
 
 #include "include.h"
 #include "qt core.h"
-
-#include "settings.h"
 #include "threading.h"
 
-#include "frontend/listings.h"
-
+#include "frontend/movie listings.h"
+#include "frontend/statistics.h"
+#include "frontend/showings.h"
+#include "frontend/settings.h"
 #include "frontend/studio.h"
 #include "frontend/movie.h"
+#include "frontend/user.h"
 
 class Main_Window;
 
@@ -38,9 +39,6 @@ class Main_Window : public QMainWindow {
 public:
 	App* app;
 	Tabs* tabs;
-
-	// Tabs
-	Settings* settings_tab;
 
 	Main_Window(App* i_app = nullptr);
 

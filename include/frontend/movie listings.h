@@ -6,10 +6,10 @@
 
 class App;
 
-class Studio_Tab : public Linear_Contents {
+class Movie_Listings_Tab : public Linear_Contents {
 	Q_OBJECT
 public:
 	App* app;
 
-	Studio_Tab(App* i_app);
+	Movie_Listings_Tab(App* i_app);
 };

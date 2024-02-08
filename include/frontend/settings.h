@@ -4,12 +4,11 @@
 #include "../qt core.h"
 #include "../threading.h"
 
-class App;
+struct App;
 
-class Movie_Listings : public Linear_Contents {
+class Settings_Tab : public Form {
 	Q_OBJECT
 public:
 	App* app;
-
-	Movie_Listings(App* i_app);
+	Settings_Tab(App* i_app);
 };

@@ -133,27 +133,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\frontend\showings.cpp" />
-    <ClCompile Include="src\frontend\listings.cpp" />
+    <ClCompile Include="src\frontend\showings.cpp" />
+    <ClCompile Include="src\frontend\movie listings.cpp" />
     <ClCompile Include="src\frontend\movie.cpp" />
-    <ClCompile Include="src\settings.cpp" />
+    <ClCompile Include="src\frontend\settings.cpp" />
     <ClCompile Include="src\main window.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\qt core.cpp" />
     <ClCompile Include="src\threading.cpp" />
     <ClCompile Include="src\frontend\studio.cpp" />
-    <ClCompile Include="include\frontend\statistics.cpp" />
-    <ClCompile Include="include\frontend\user.cpp" />
+    <ClCompile Include="src\frontend\statistics.cpp" />
+    <ClCompile Include="src\frontend\user.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\frontend\showings.h" />
-    <ClInclude Include="include\frontend\statistics.h" />
-    <ClInclude Include="include\frontend\user.h" />
-    <QtMoc Include="include\frontend\listings.h" />
-    <ClInclude Include="include\frontend\studio.h" />
+    <QtMoc Include="include\frontend\showings.h" />
+    <QtMoc Include="include\frontend\statistics.h" />
+    <QtMoc Include="include\frontend\user.h" />
+    <QtMoc Include="include\frontend\movie listings.h" />
+    <QtMoc Include="include\frontend\studio.h" />
     <QtMoc Include="include\threading.h" />
-    <QtMoc Include="include\settings.h" />
-    <ClInclude Include="include\frontend\movie.h" />
+    <QtMoc Include="include\frontend\settings.h" />
+    <QtMoc Include="include\frontend\movie.h" />
     <ClInclude Include="include\include.h" />
     <QtMoc Include="include\main window.h" />
     <QtMoc Include="include\qt core.h" />

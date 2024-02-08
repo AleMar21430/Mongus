@@ -342,7 +342,8 @@ Splitter::Splitter(const bool& i_vertical) {
 Tabs::Tabs() :
 	QTabWidget()
 {
-	setTabPosition(QTabWidget::TabPosition::West);
+	setContentsMargins(0, 0, 0, 0);
+	setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
 }
 
 Search_Bar::Search_Bar() :

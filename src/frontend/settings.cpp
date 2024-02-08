@@ -1,8 +1,8 @@
-#include "settings.h"
+#include "frontend/settings.h"
 
 #include "main window.h"
 
-Settings::Settings(App* i_app) :
+Settings_Tab::Settings_Tab(App* i_app) :
 	Form(),
 	app(i_app)
 {
