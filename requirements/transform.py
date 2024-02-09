@@ -13,7 +13,7 @@ json_data = []
 for index, row in data.iterrows():
 	json_data.append(
 		{
-			"title:": row.title,
+			"title": row.title,
 			"image_url" : row.image_url,
 			"title_english" : row.title_english,
 			"title_japanese" : row.title_japanese,

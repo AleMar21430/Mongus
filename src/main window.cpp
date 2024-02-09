@@ -75,21 +75,22 @@ Main_Window::Main_Window(App* app) :
 	Movie_Tab* movie_tab = new Movie_Tab(app);
 	User_Tab* user_tab = new User_Tab(app);
 
-	movie_listings_tab->activate();
-
 	tabs = new Tabs();
 	tabs->addTab(movie_listings_tab, "Movie Listings");
 	tabs->addTab(showings_tab, "Movie Showings");
 	tabs->addTab(settings_tab, "Settings");
-	connect(tabs, &Tabs::currentChanged, [this](int index) { changeView(index); });
 
 	Splitter* splitter = new Splitter(true);
 	splitter->addWidget(tabs);
 	splitter->addWidget(app->log);
 	splitter->setSizes({ 2000, 250 });
 
+	connect(tabs, &Tabs::currentChanged, [this](int index) { changeView(index); });
+	connect(app->mongo_thread, &Mongo_Thread::logMsg, this, &Main_Window::logMessage);
+
 	setCentralWidget(splitter);
 	showMaximized();
+	movie_listings_tab->activate();
 }
 
 void Main_Window::changeView(const int& row) {
