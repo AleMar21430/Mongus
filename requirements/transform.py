@@ -14,7 +14,7 @@ for index, row in data.iterrows():
 	json_data.append(
 		{
 			"title": row.title,
-			"image_url" : row.image_url,
+			"image_url" : row.image_url.replace("myanimelist.cdn-dena.com", "cdn.myanimelist.net"),
 			"title_english" : row.title_english,
 			"title_japanese" : row.title_japanese,
 			"premiere": row.premiered,

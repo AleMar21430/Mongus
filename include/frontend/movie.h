@@ -6,10 +6,10 @@
 
 class App;
 
-class Movie_Tab : public Linear_Contents {
+class Movie_Tab : public QMainWindow {
 	Q_OBJECT
 public:
 	App* app;
 
-	Movie_Tab(App* i_app);
+	Movie_Tab(App* i_app, const QString& title);
 };

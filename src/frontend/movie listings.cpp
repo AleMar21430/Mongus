@@ -1,6 +1,7 @@
 #include "frontend/movie listings.h"
 
 #include "main window.h"
+#include "frontend/movie.h"
 
 Movie_Listings_Tab::Movie_Listings_Tab(App* i_app) :
 	Linear_Contents(),
@@ -8,8 +9,11 @@ Movie_Listings_Tab::Movie_Listings_Tab(App* i_app) :
 {
 	list = new List(true);
 	layout->addWidget(list);
-
 	connect(list->verticalScrollBar(), &QScrollBar::valueChanged, [this](int value) { loadThumbnails(); });
+	connect(list, &List::itemDoubleClicked, [this](QListWidgetItem* item) {
+		Movie_Tab* movie = new Movie_Tab(app, item->text());
+	});
+
 	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {
 		if (query.type == Mongo_Type::LISTINGS && query.request_id == app->mongo_request)
 			process(data);
@@ -23,6 +27,7 @@ void Movie_Listings_Tab::activate() {
 	list->clear();
 	Mongo_Query work = Mongo_Query({ {"collection", "movies"} }, Mongo_Type::LISTINGS, app->mongo_request);
 	app->mongo_thread->queueWork(work);
+	QTimer::singleShot(1500, this, &Movie_Listings_Tab::loadThumbnails);
 }
 
 void Movie_Listings_Tab::loadThumbnails() {
@@ -50,16 +55,14 @@ void Movie_Listings_Tab::loadThumbnails() {
 	//for (int i = 0; i < index_a; i++) {
 	//	list->item(i)->setIcon(QIcon());
 	//}
+	const cpr::Header headers{ { "user-agent", "User [Pekoyo]" }, { "Client-ID", " {{clientId}}"} };
 	for (int i = index_a; i < index_b; i++) {
-		Async_Thread* thread = new Async_Thread(Async_Query({ { "url", list->item(i)->data(100).toString().toStdString() }}, Async_Type::LISTINGS, app->async_request, i));
+		Async_Thread* thread = new Async_Thread(Async_Query({ { "url", list->item(i)->data(100).toString().toStdString() }}, Async_Type::LISTINGS, app->async_request, headers, i));
 		app->async_threads.push_back(thread);
 
 		connect(thread, &Async_Thread::iconResult, [this](const Async_Query& query, const QIcon& icon) {
 			if (query.request_id == app->async_request && query.thread_id >= 0 && query.thread_id < list->count()) {
 				list->item(query.thread_id)->setIcon(icon);
-				stringstream msg;
-				msg << "Trying to set icon for: " << query.thread_id;
-				app->window->logMessage(QString::fromStdString(msg.str()));
 			}
 			else {
 				stringstream msg;
@@ -89,6 +92,7 @@ void Movie_Listings_Tab::process(const json& data) {
 				item->setTextAlignment(Qt::AlignmentFlag::AlignHCenter | Qt::AlignmentFlag::AlignBottom);
 				item->setText(QString::fromStdString(entry["title"].dump()));
 				item->setData(100, QString::fromStdString(entry["image_url"].dump()));
+				item->setData(500, QString::fromStdString(entry.dump()));
 				item->setIcon(loading);
 				list->addItem(item);
 			}

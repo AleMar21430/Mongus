@@ -21,16 +21,19 @@ struct Async_Query {
 	Async_Type type;
 	uint32_t request_id;
 	int thread_id;
+	cpr::Header headers;
 
 	Async_Query(
 		const unordered_map<string, string>& query,
 		const Async_Type& type,
 		const uint32_t& request_id,
+		const cpr::Header& headers,
 		const int& thread_id = 0
 	) :
 		query(query),
 		type(type),
 		request_id(request_id),
+		headers(headers),
 		thread_id(thread_id)
 	{}
 };
