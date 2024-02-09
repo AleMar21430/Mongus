@@ -16,5 +16,6 @@ public:
 	Movie_Listings_Tab(App* i_app);
 
 	void activate();
+	void loadThumbnails();
 	void process(const json& data);
 };

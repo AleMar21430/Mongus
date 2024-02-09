@@ -50,7 +50,7 @@ public:
 class List : public QListWidget {
 	Q_OBJECT
 public:
-	List(const bool& i_vertical = true);
+	List(const bool& i_icon_mode);
 
 	bool itemExists(const QString& i_label) const;
 	int itemRow(const QString& i_label) const;

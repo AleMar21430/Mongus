@@ -21,10 +21,10 @@ struct App : QApplication {
 	Mongo_Thread* mongo_thread;
 	uint32_t mongo_request;
 
-	unordered_map<QString, QString> settings;
-	unordered_map<Async_Type, uint32_t> async_requests;
+	QList<Async_Thread*> async_threads;
+	uint32_t async_request;
 
-	QPixmap error_image;
+	unordered_map<QString, QString> settings;
 
 	App(int argc, char* argv[]);
 

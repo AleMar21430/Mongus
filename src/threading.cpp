@@ -1,7 +1,26 @@
 #include "threading.h"
 
 void Async_Thread::run() {
-	emit result(work, "");
+	if (work.type == Async_Type::LISTINGS) {
+		if (work.query.at("url") != "Not available.") {
+			emit logMsg("Requesting thumbnail: " + QString::fromStdString(work.query.at("url")));
+			cpr::Response response = cpr::Get(cpr::Url{ work.query.at("url") });
+			if (response.status_code == 200) {
+				QPixmap pixmap;
+				pixmap.loadFromData(QByteArray::fromStdString(response.text));
+				emit iconResult(work, QIcon(pixmap));
+			}
+			else {
+				stringstream msg;
+				msg << "Error loading: " << work.query.at("url") << "  [" << response.status_code + "] " << response.text;
+				//emit logMsg(QString::fromStdString(msg.str()));
+				emit iconResult(work, QIcon("./res/Error.png"));
+			}
+		}
+		else {
+			emit iconResult(work, QIcon("./res/Error.png"));
+		}
+	}
 }
 
 void Mongo_Thread::run() {

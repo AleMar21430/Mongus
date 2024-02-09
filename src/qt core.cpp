@@ -23,7 +23,7 @@ Linear_Contents::Linear_Contents(const bool& Vertical, const int& Margins) :
 	setLayout(layout);
 }
 
-List::List(const bool& i_vertical) :
+List::List(const bool& i_icon_mode) :
 	QListWidget()
 {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -35,7 +35,7 @@ List::List(const bool& i_vertical) :
 	setDragEnabled(false);
 	setSpacing(0);
 
-	if (i_vertical) {
+	if (i_icon_mode) {
 		setIconSize(QSize(256, 256));
 		setViewMode(QListWidget::ViewMode::IconMode);
 		setSelectionMode(QListWidget::SelectionMode::ExtendedSelection);

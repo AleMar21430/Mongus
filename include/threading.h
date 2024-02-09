@@ -6,7 +6,8 @@
 struct Async_Query;
 class Async_Thread;
 enum struct Async_Type {
-	UNKNOWN
+	UNKNOWN,
+	LISTINGS
 };
 struct Mongo_Query;
 class Mongo_Thread;
@@ -16,18 +17,21 @@ enum struct Mongo_Type {
 };
 
 struct Async_Query {
-	QString query;
+	unordered_map<string, string> query;
 	Async_Type type;
 	uint32_t request_id;
+	int thread_id;
 
 	Async_Query(
-		const QString& query,
+		const unordered_map<string, string>& query,
 		const Async_Type& type,
-		const uint32_t& request_id
+		const uint32_t& request_id,
+		const int& thread_id = 0
 	) :
 		query(query),
 		type(type),
-		request_id(request_id)
+		request_id(request_id),
+		thread_id(thread_id)
 	{}
 };
 
@@ -35,15 +39,18 @@ struct Mongo_Query {
 	unordered_map<string, string> query;
 	Mongo_Type type;
 	uint32_t request_id;
+	int thread_id;
 
 	Mongo_Query(
 		const unordered_map<string, string>& query,
 		const Mongo_Type& type,
-		const uint32_t& request_id
+		const uint32_t& request_id,
+		const int& thread_id = 0
 	) :
 		query(query),
 		type(type),
-		request_id(request_id)
+		request_id(request_id),
+		thread_id(thread_id)
 	{}
 };
 
@@ -57,9 +64,11 @@ public:
 		work(work)
 	{};
 	~Async_Thread() {};
+
 	void run() override;
 signals:
 	void result(const Async_Query& query, const string& data);
+	void iconResult(const Async_Query& query, const QIcon& icon);
 	void logMsg(const QString& message);
 };
 
@@ -81,11 +90,9 @@ public:
 		mongo_connection = mongo::client(mongo::uri((*settings)["db_url"].toStdString()));
 		database = mongo_connection["Proyecto_1"];
 	};
-	~Mongo_Thread() {
-	};
+	~Mongo_Thread() {};
 
 	void run() override;
-
 	void processWork(const Mongo_Query& work);
 	void queueWork(const Mongo_Query& work);
 	void cancelWork();

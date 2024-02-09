@@ -11,10 +11,7 @@ App::App(int argc, char* argv[]) :
 }
 
 void App::load() {
-	error_image = QPixmap("./res/Error.png");
-	async_requests = {
-		{ Async_Type::UNKNOWN, 0 }
-	};
+	async_request = 0;
 	mongo_request = 0;
 	mongo_thread = new Mongo_Thread(&settings);
 	mongo_thread->start();
