@@ -34,4 +34,4 @@ for index, row in data.iterrows():
 	)
 
 
-open('movies.json', 'w', -1, "utf-8").write(json.dumps(json_data))
+open('movies_data.json', 'w', -1, "utf-8").write(json.dumps(json_data))
