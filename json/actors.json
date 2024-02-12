@@ -1,5 +1,46 @@
 [
 	{
-		
+		"name": "Yui Ishikawa",
+		"birth": "1989-05-30"
+	},
+	{
+		"name": "Elijah Wood",
+		"birth": null
+	},
+	{
+		"name": "Billy Boyd",
+		"birth": null
+	},
+	{
+		"name": "Sean Astin",
+		"birth": null
+	},
+	{
+		"name": "Viggo Mortensen",
+		"birth": null
+	},
+	{
+		"name": "Sean Bean",
+		"birth": null
+	},
+	{
+		"name": "John Rhys-Davies",
+		"birth": null
+	},
+	{
+		"name": "Anthony Hopkins",
+		"birth": "1937-12-31"
+	},
+	{
+		"name": "Olivia Colman",
+		"birth": null
+	},
+	{
+		"name": "Willem Dafoe",
+		"birth": "1955-07-22"
+	},
+	{
+		"name": "Julianne Nicholson",
+		"birth": "1971-07-01"
 	}
 ]

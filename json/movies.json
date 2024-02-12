@@ -1,21 +1,54 @@
 [
 	{
 		"title": "Violet Evergarden Movie",
-		"image_url": "https://i.imgur.com/tbPk3PL.jpeg",
-		"title_english": "Violet Evergarden: The Movie",
-		"title_japanese": "劇場版 ヴァイオレット・エヴァーガーデン",
-		"premiere": "Sep 18, 2020",
-		"duration": "140",
-		"studio": "Kyoto Animation",
-		"producer": ["Shochiku", "ABC Animation"],
-		"licensor": "Funimation",
+		"premiere": "2020-9-18",
+		"duration": 140,
+		"producer": "Kyoto Animation",
+		"director": null,
 		"rating": "PG-13 - Teens 13 or older",
 		"source": "Light novel",
+		"cast": ["Yui Ishikawa"],
 		"genre": ["Award Winning", "Drama", "Fantasy"],
-		"members": 593876,
-		"score": 8.88,
-		"scored_by": 266099,
-		"popularity": 360,
-		"ranked": 24
+		"budget": null,
+		"ww_box_office": null
+	},
+	{
+		"title": "The Lord of the Rings: The Fellowship of the Ring",
+		"premiere": "2001-12-19",
+		"duration": 178,
+		"producer": "Warner Bros.",
+		"director": "Peter Jackson",
+		"rating": "PG-13 - Teens 13 or older",
+		"source": "Book Series",
+		"cast" : ["Elijah Wood", "Billy Boyd", "Sean Astin", "Dominic Monaghan", "Ian McKellen", "Viggo Mortensen", "Sean Bean", "John Rhys-Davies", "Orlando Bloom"],
+		"genre": ["Fantasy"],
+		"budget": 93000000,
+		"ww_box_office": 898748756
+	},
+	{
+		"title": "The Father",
+		"premiere": "2020-01-27",
+		"duration": 97,
+		"producer": "Sony Pictures",
+		"director": "Florian Zeller",
+		"rating": "PG-13 - Teens 13 or older",
+		"source": "Original",
+		"cast" : ["Anthony Hopkins", "Olivia Colman", "Rufus Sewell", "Imogen Poots", "Olivia Williams", "Mark Gatiss"],
+		"genre": ["Drama"],
+		"budget": 6000000,
+		"ww_box_office": 24100000
+	},
+	{
+		"title": "Togo",
+		"premiere": "2019-12-20",
+		"duration": 113,
+		"producer": "Walt Disney",
+		"director": "Ericson Core",
+		"rating": "PG-13 - Teens 13 or older",
+		"source": "Historic",
+		"cast" : ["Willem Dafoe", "Julianne Nicholson"],
+		"genre": ["Drama", "Adventure"],
+		"budget": 40000000,
+		"ww_box_office": null
 	}
 ]

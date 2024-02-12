@@ -6,10 +6,12 @@
 
 class App;
 
-class Movie_Tab : public QMainWindow {
+class Add_Showing_Tab : public Linear_Contents {
 	Q_OBJECT
 public:
 	App* app;
 
-	Movie_Tab(App* i_app, QListWidgetItem* item);
+	List* list;
+
+	Add_Showing_Tab(App* i_app);
 };

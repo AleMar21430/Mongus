@@ -45,6 +45,9 @@ public:
 	Linear_Layout* layout;
 
 	Linear_Contents(const bool& Vertical = true, const int& Margins = 0);
+
+	void addWidget(QWidget* widget);
+	void clear();
 };
 
 class List : public QListWidget {

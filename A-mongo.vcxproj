@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\frontend\add showing.cpp" />
     <ClCompile Include="src\frontend\showings.cpp" />
     <ClCompile Include="src\frontend\movie listings.cpp" />
     <ClCompile Include="src\frontend\movie.cpp" />
@@ -154,6 +155,7 @@
     <QtMoc Include="include\threading.h" />
     <QtMoc Include="include\frontend\settings.h" />
     <QtMoc Include="include\frontend\movie.h" />
+    <QtMoc Include="include\frontend\add showing.h" />
     <ClInclude Include="include\include.h" />
     <QtMoc Include="include\main window.h" />
     <QtMoc Include="include\qt core.h" />

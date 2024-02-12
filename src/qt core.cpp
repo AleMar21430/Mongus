@@ -23,6 +23,14 @@ Linear_Contents::Linear_Contents(const bool& Vertical, const int& Margins) :
 	setLayout(layout);
 }
 
+void Linear_Contents::addWidget(QWidget* widget) {
+	layout->addWidget(widget);
+}
+
+void Linear_Contents::clear() {
+	layout->clear();
+}
+
 List::List(const bool& i_icon_mode) :
 	QListWidget()
 {

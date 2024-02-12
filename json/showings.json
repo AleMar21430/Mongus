@@ -1,5 +1,11 @@
 [
 	{
-		
+		"movie": "Togo",
+		"date": "2024-02-11",
+		"room": "A",
+		"type": "Imax",
+		"seats": 100,
+		"sold": 50,
+		"price": 12.50
 	}
 ]

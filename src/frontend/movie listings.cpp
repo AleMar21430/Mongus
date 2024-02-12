@@ -11,7 +11,7 @@ Movie_Listings_Tab::Movie_Listings_Tab(App* i_app) :
 	layout->addWidget(list);
 	connect(list->verticalScrollBar(), &QScrollBar::valueChanged, [this](int value) { loadThumbnails(); });
 	connect(list, &List::itemDoubleClicked, [this](QListWidgetItem* item) {
-		Movie_Tab* movie = new Movie_Tab(app, item->text());
+		Movie_Tab* movie = new Movie_Tab(app, item);
 	});
 
 	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {
@@ -86,12 +86,11 @@ void Movie_Listings_Tab::process(const json& data) {
 	const QIcon loading = QIcon("./res/loading.png");
 	if (data.is_array()) {
 		for (const auto& entry : data) {
-			if (entry.contains("title") && entry.contains("image_url")) {
+			if (entry.contains("title")) {
 				QListWidgetItem* item = new QListWidgetItem();
 				item->setSizeHint(QSize(256, 300));
 				item->setTextAlignment(Qt::AlignmentFlag::AlignHCenter | Qt::AlignmentFlag::AlignBottom);
 				item->setText(QString::fromStdString(entry["title"].dump()));
-				item->setData(100, QString::fromStdString(entry["image_url"].dump()));
 				item->setData(500, QString::fromStdString(entry.dump()));
 				item->setIcon(loading);
 				list->addItem(item);
