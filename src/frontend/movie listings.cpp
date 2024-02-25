@@ -25,7 +25,7 @@ void Movie_Listings_Tab::activate() {
 	app->async_request++;
 	app->mongo_thread->cancelWork();
 	list->clear();
-	Mongo_Query work = Mongo_Query({ {"collection", "movies"} }, Mongo_Type::LISTINGS, app->mongo_request);
+	Mongo_Query work = Mongo_Query({ {"collection", "peliculas"} }, Mongo_Type::LISTINGS, app->mongo_request);
 	app->mongo_thread->queueWork(work);
 	QTimer::singleShot(1500, this, &Movie_Listings_Tab::loadThumbnails);
 }
@@ -86,11 +86,12 @@ void Movie_Listings_Tab::process(const json& data) {
 	const QIcon loading = QIcon("./res/loading.png");
 	if (data.is_array()) {
 		for (const auto& entry : data) {
-			if (entry.contains("title")) {
+			app->window->logMessage(QString::fromStdString(entry.dump()));
+			if (entry.contains("titulo")) {
 				QListWidgetItem* item = new QListWidgetItem();
 				item->setSizeHint(QSize(256, 300));
 				item->setTextAlignment(Qt::AlignmentFlag::AlignHCenter | Qt::AlignmentFlag::AlignBottom);
-				item->setText(QString::fromStdString(entry["title"].dump()));
+				item->setText(QString::fromStdString(entry["titulo"].dump()));
 				item->setData(500, QString::fromStdString(entry.dump()));
 				item->setIcon(loading);
 				list->addItem(item);

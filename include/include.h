@@ -17,7 +17,9 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
+
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 
 #include <cpr/cpr.h>
 #include <json.h>

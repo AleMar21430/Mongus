@@ -1,0 +1,64 @@
+[
+	{
+		"$match": {
+			"en_cartelera": true
+		}
+	},
+	{
+		"$lookup": {
+			"from": "actores",
+			"localField": "actores",
+			"foreignField": "_id",
+			"as": "actores_detalle"
+		}
+	},
+	{
+		"$lookup": {
+			"from": "premios",
+			"localField": "premios",
+			"foreignField": "_id",
+			"as": "premios_detalle"
+		}
+	},
+	{
+		"$lookup": {
+			"from": "resenas",
+			"localField": "resenas",
+			"foreignField": "_id",
+			"as": "resenas_detalle"
+		}
+	},
+	{
+		"$lookup": {
+			"from": "staff_produccion",
+			"localField": "staff_produccion",
+			"foreignField": "_id",
+			"as": "staff_produccion_detalle"
+		}
+	},
+	{
+		"$project": {
+			"titulo": 1,
+			"anio_lanzamiento": 1,
+			"actores_detalle": {
+				"nombre": 1,
+				"fecha_nacimiento": 1,
+				"nacionalidad": 1
+			},
+			"premios_detalle": {
+				"nombre_premio": 1,
+				"anno": 1,
+				"categoria": 1
+			},
+			"resenas_detalle": {
+				"comentario": 1,
+				"calificacion": 1,
+				"fecha_resena": 1
+			},
+			"staff_produccion_detalle": {
+				"nombre": 1,
+				"cargo": 1
+			}
+		}
+	}
+]
