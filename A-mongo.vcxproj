@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\frontend\actor.cpp" />
     <ClCompile Include="src\frontend\add showing.cpp" />
     <ClCompile Include="src\frontend\showings.cpp" />
     <ClCompile Include="src\frontend\movie listings.cpp" />
@@ -146,7 +147,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\qt core.cpp" />
     <ClCompile Include="src\threading.cpp" />
-    <ClCompile Include="src\frontend\studio.cpp" />
+    <ClCompile Include="src\frontend\producer.cpp" />
     <ClCompile Include="src\frontend\statistics.cpp" />
     <ClCompile Include="src\frontend\user.cpp" />
   </ItemGroup>
@@ -155,11 +156,12 @@
     <QtMoc Include="include\frontend\statistics.h" />
     <QtMoc Include="include\frontend\user.h" />
     <QtMoc Include="include\frontend\movie listings.h" />
-    <QtMoc Include="include\frontend\studio.h" />
+    <QtMoc Include="include\frontend\producer.h" />
     <QtMoc Include="include\threading.h" />
     <QtMoc Include="include\frontend\settings.h" />
     <QtMoc Include="include\frontend\movie.h" />
     <QtMoc Include="include\frontend\add showing.h" />
+    <QtMoc Include="include\frontend\actor.h" />
     <ClInclude Include="include\include.h" />
     <QtMoc Include="include\main window.h" />
     <QtMoc Include="include\qt core.h" />

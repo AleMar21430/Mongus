@@ -29,6 +29,8 @@ class Label : public QLabel {
 	Q_OBJECT
 public:
 	Label(const QString& i_label);
+
+	void setFontSize(const int& size);
 };
 
 class Linear_Layout : public QBoxLayout {

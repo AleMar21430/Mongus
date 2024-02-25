@@ -8,7 +8,8 @@
 #include "frontend/statistics.h"
 #include "frontend/showings.h"
 #include "frontend/settings.h"
-#include "frontend/studio.h"
+#include "frontend/producer.h"
+#include "frontend/actor.h"
 #include "frontend/movie.h"
 #include "frontend/user.h"
 

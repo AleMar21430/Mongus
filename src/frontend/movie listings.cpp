@@ -31,7 +31,7 @@ void Movie_Listings_Tab::activate() {
 }
 
 void Movie_Listings_Tab::loadThumbnails() {
-	const int columns = static_cast<int>(floor(list->width() / 256));
+	/*const int columns = static_cast<int>(floor(list->width() / 256));
 	const QListWidgetItem* item_a = list->itemAt(QPoint(5, 5));
 	const QListWidgetItem* item_b = list->itemAt(QPoint(5, list->height() - 10));
 
@@ -55,7 +55,7 @@ void Movie_Listings_Tab::loadThumbnails() {
 	//for (int i = 0; i < index_a; i++) {
 	//	list->item(i)->setIcon(QIcon());
 	//}
-	const cpr::Header headers{ { "user-agent", "User [Pekoyo]" }, { "Client-ID", " {{clientId}}"} };
+	const cpr::Header headers{{"user-agent", "User [Pekoyo]"}, {"Client-ID", " {{clientId}}"}};
 	for (int i = index_a; i < index_b; i++) {
 		Async_Thread* thread = new Async_Thread(Async_Query({ { "url", list->item(i)->data(100).toString().toStdString() }}, Async_Type::UNKNOWN, app->async_request, headers, i));
 		app->async_threads.push_back(thread);
@@ -77,9 +77,10 @@ void Movie_Listings_Tab::loadThumbnails() {
 		});
 		thread->start();
 	}
+	
 	//for (int i = index_b + 1; i < gallery_view->count(); i++) {
 	//	gallery_view->item(i)->setIcon(QIcon());
-	//}
+	//}*/
 }
 
 void Movie_Listings_Tab::process(const json& data) {

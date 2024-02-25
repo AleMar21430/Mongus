@@ -2,6 +2,9 @@
 
 #include "main window.h"
 
+#include "frontend/producer.h"
+#include "frontend/actor.h"
+
 Movie_Tab::Movie_Tab(App* i_app, QListWidgetItem* item) :
 	QMainWindow(),
 	app(i_app)
@@ -11,6 +14,7 @@ Movie_Tab::Movie_Tab(App* i_app, QListWidgetItem* item) :
 	json data = json::parse(item->data(500).toString().toStdString());
 
 	Label* title_widget =  new Label(item->text());
+	title_widget->setFontSize(25);
 	Label* premiere =      new Label(QString::fromStdString(data["anio_lanzamiento"].dump()));
 	//Label* duration =      new Label(QString::fromStdString(data["duration"].dump()));
 	//Label* producer =      new Label(QString::fromStdString(data["producer"].dump()));

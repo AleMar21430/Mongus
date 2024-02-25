@@ -362,7 +362,14 @@ Search_Bar::Search_Bar() :
 
 Label::Label(const QString& i_label) :
 	QLabel(i_label)
-{}
+{
+	setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Preferred);
+	setAlignment(Qt::AlignmentFlag::AlignCenter);
+}
+
+void Label::setFontSize(const int& size) {
+	setStyleSheet(styleSheet() + "font-size: " + QString::fromStdString(to_string(size) + "px"));
+}
 
 Form::Form() {
 	layout = new QFormLayout();
@@ -371,7 +378,7 @@ Form::Form() {
 }
 
 Button::Button() {
-	setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
+	setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Preferred);
 }
 
 Text_Edit::Text_Edit() {
