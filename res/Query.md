@@ -31,6 +31,31 @@
 ]
 ```
 ```cpp
+mongocxx::pipeline pipeline;
+
+pipeline.lookup(make_document(
+	kvp("from", "actores"),
+	kvp("localField", "actores"),
+	kvp("foreignField", "_id"),
+	kvp("as", "actores_detalle")
+));
+
+pipeline.lookup(make_document(
+	kvp("from", "staff_produccion"),
+	kvp("localField", "staff_produccion"),
+	kvp("foreignField", "_id"),
+	kvp("as", "staff_produccion_detalle")
+));
+
+pipeline.project(make_document(
+	kvp("titulo", 1),
+	kvp("anio_lanzamiento", 1),
+	kvp("actores_detalle.nombre", 1),
+	kvp("actores_detalle.fecha_nacimiento", 1),
+	kvp("actores_detalle.nacionalidad", 1),
+	kvp("staff_produccion_detalle.nombre", 1),
+	kvp("staff_produccion_detalle.cargo", 1)
+));
 ```
 
 # MOVIE_LISTINGS
@@ -101,7 +126,7 @@
 ]
 ```
 ```cpp
-mongocxx::pipeline pipeline{};
+mongocxx::pipeline pipeline;
 
 pipeline.match(make_document(kvp("en_cartelera", true)));
 
@@ -180,6 +205,25 @@ pipeline.project(make_document(
 ]
 ```
 ```cpp
+mongocxx::pipeline pipeline;
+
+pipeline.lookup({
+	make_document(
+		kvp("from", "peliculas"),
+		kvp("localField", "_id"),
+		kvp("foreignField", "casa_productora"),
+		kvp("as", "peliculas_detalle")
+	)
+});
+
+pipeline.project({
+	make_document(
+		kvp("nombre", 1),
+		kvp("pais", 1),
+		kvp("peliculas_detalle.titulo", 1),
+		kvp("peliculas_detalle.anio_lanzamiento", 1)
+	)
+});
 ```
 
 # Query de ordenamiento:
@@ -221,6 +265,35 @@ pipeline.project(make_document(
 ]
 ```
 ```cpp
+mongocxx::pipeline pipeline;
+
+pipeline.lookup(make_document(
+	kvp("from", "actores"),
+	kvp("localField", "actores"),
+	kvp("foreignField", "_id"),
+	kvp("as", "actores_detalle")
+));
+
+pipeline.lookup(make_document(
+	kvp("from", "staff_produccion"),
+	kvp("localField", "staff_produccion"),
+	kvp("foreignField", "_id"),
+	kvp("as", "staff_produccion_detalle")
+));
+
+pipeline.project(make_document(
+	kvp("titulo", 1),
+	kvp("anio_lanzamiento", 1),
+	kvp("actores_detalle.nombre", 1),
+	kvp("actores_detalle.fecha_nacimiento", 1),
+	kvp("actores_detalle.nacionalidad", 1),
+	kvp("staff_produccion_detalle.nombre", 1),
+	kvp("staff_produccion_detalle.cargo", 1)
+));
+
+pipeline.sort(make_document(
+	kvp("anio_lanzamiento", 1)
+));
 ```
 
 ### Ordenamiento Descendente

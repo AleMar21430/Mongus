@@ -1,7 +1,7 @@
 #include "threading.h"
 
 void Async_Thread::run() {
-	if (work.type == Async_Type::LISTINGS) {
+	if (work.type == Async_Type::UNKNOWN) {
 		if (work.query.at("url") != "Not available.") {
 			emit logMsg("Requesting thumbnail: " + QString::fromStdString(work.query.at("url")));
 
@@ -44,9 +44,9 @@ using namespace bsoncxx::builder::basic;
 void Mongo_Thread::processWork(const Mongo_Query& work) {
 	emit logMsg("Mongo Thread Processing");
 
-	if (work.type == Mongo_Type::MOVIE_LISTINGS) {
+	if (work.type == Mongo_Type::PRODUCER_VIEW) {
 		mongo::collection collection = database[work.query.at("collection")];
-		mongocxx::pipeline pipeline{};
+		mongocxx::pipeline pipeline;
 		pipeline.lookup({
 			make_document(
 				kvp("from", "peliculas"),
@@ -75,7 +75,7 @@ void Mongo_Thread::processWork(const Mongo_Query& work) {
 
 	if (work.type == Mongo_Type::MOVIE_LISTINGS) {
 		mongo::collection collection = database[work.query.at("collection")];
-		mongocxx::pipeline pipeline{};
+		mongocxx::pipeline pipeline;
 
 		pipeline.match(make_document(kvp("en_cartelera", true)));
 
