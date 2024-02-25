@@ -6,14 +6,14 @@
 struct Async_Query;
 class Async_Thread;
 enum struct Async_Type {
-	UNKNOWN,
-	LISTINGS
+	UNKNOWN
 };
 struct Mongo_Query;
 class Mongo_Thread;
 enum struct Mongo_Type {
-	UNKNOWN,
-	LISTINGS
+	MOVIE_LISTINGS,
+	MOVIE_VIEW,
+	PRODUCER_VIEW
 };
 
 struct Async_Query {

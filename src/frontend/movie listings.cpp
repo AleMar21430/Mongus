@@ -15,7 +15,7 @@ Movie_Listings_Tab::Movie_Listings_Tab(App* i_app) :
 	});
 
 	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {
-		if (query.type == Mongo_Type::LISTINGS && query.request_id == app->mongo_request)
+		if (query.type == Mongo_Type::MOVIE_LISTINGS && query.request_id == app->mongo_request)
 			process(data);
 	});
 }
@@ -25,7 +25,7 @@ void Movie_Listings_Tab::activate() {
 	app->async_request++;
 	app->mongo_thread->cancelWork();
 	list->clear();
-	Mongo_Query work = Mongo_Query({ {"collection", "peliculas"} }, Mongo_Type::LISTINGS, app->mongo_request);
+	Mongo_Query work = Mongo_Query({ {"collection", "peliculas"} }, Mongo_Type::MOVIE_LISTINGS, app->mongo_request);
 	app->mongo_thread->queueWork(work);
 	QTimer::singleShot(1500, this, &Movie_Listings_Tab::loadThumbnails);
 }
@@ -57,7 +57,7 @@ void Movie_Listings_Tab::loadThumbnails() {
 	//}
 	const cpr::Header headers{ { "user-agent", "User [Pekoyo]" }, { "Client-ID", " {{clientId}}"} };
 	for (int i = index_a; i < index_b; i++) {
-		Async_Thread* thread = new Async_Thread(Async_Query({ { "url", list->item(i)->data(100).toString().toStdString() }}, Async_Type::LISTINGS, app->async_request, headers, i));
+		Async_Thread* thread = new Async_Thread(Async_Query({ { "url", list->item(i)->data(100).toString().toStdString() }}, Async_Type::UNKNOWN, app->async_request, headers, i));
 		app->async_threads.push_back(thread);
 
 		connect(thread, &Async_Thread::iconResult, [this](const Async_Query& query, const QIcon& icon) {

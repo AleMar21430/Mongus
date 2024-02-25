@@ -43,7 +43,37 @@ using namespace bsoncxx::builder::basic;
 
 void Mongo_Thread::processWork(const Mongo_Query& work) {
 	emit logMsg("Mongo Thread Processing");
-	if (work.type == Mongo_Type::LISTINGS) {
+
+	if (work.type == Mongo_Type::MOVIE_LISTINGS) {
+		mongo::collection collection = database[work.query.at("collection")];
+		mongocxx::pipeline pipeline{};
+		pipeline.lookup({
+			make_document(
+				kvp("from", "peliculas"),
+				kvp("localField", "_id"),
+				kvp("foreignField", "casa_productora"),
+				kvp("as", "peliculas_detalle")
+			)
+			});
+		pipeline.project({
+			make_document(
+				kvp("nombre", 1),
+				kvp("pais", 1),
+				kvp("peliculas_detalle.titulo", 1),
+				kvp("peliculas_detalle.anio_lanzamiento", 1)
+			)
+			});
+
+		mongocxx::cursor mongo_result = collection.aggregate(pipeline);
+
+		json json_data;
+		for (const bsoncxx::v_noabi::document::view& doc : mongo_result) {
+			json_data.push_back(json::parse(bsoncxx::to_json(doc)));
+		}
+		emit result(work, json_data);
+	}
+
+	if (work.type == Mongo_Type::MOVIE_LISTINGS) {
 		mongo::collection collection = database[work.query.at("collection")];
 		mongocxx::pipeline pipeline{};
 
