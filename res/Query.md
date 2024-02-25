@@ -1,3 +1,26 @@
+```python
+MOVIE_VIEW {
+	"premiere_date": str
+	"duration": int
+	"producer": str
+	"director": str
+	"rating": str
+	"budget": int
+	"box_office": int
+
+	"genres": List[str]
+	"cast": List[str]
+	"reviews": List[User[str, str, int]] #(Username, Review Text, Score)
+}
+PRODUCER_VIEW
+ACTOR_VIEW
+
+MOVIE_LISTINGS
+PRODUCER_LIST
+ACTOR_LIST
+USER_LIST
+```
+
 # MOVIE_VIEW
 ```json
 [

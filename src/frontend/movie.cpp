@@ -21,7 +21,6 @@ Movie_Tab::Movie_Tab(App* i_app, QListWidgetItem* item) :
 	Button* producer =     new Button("Producer: " + QString::fromStdString(data["producer"].dump()));
 	Button* director =     new Button("Director: " + QString::fromStdString(data["director"].dump()));
 	Label* rating =        new Label ("Rating: " + QString::fromStdString(data["rating"].dump()));
-	Label* source =        new Label ("Source: " + QString::fromStdString(data["source"].dump()));
 	Label* genre =         new Label ("Genre: " + QString::fromStdString(data["genre"].dump()));
 	Label* budget =        new Label ("Budget: " + QString::fromStdString(data["budget"].dump()));
 	Label* ww_box_office = new Label ("Box Office: " + QString::fromStdString(data["ww_box_office"].dump()));
@@ -36,7 +35,6 @@ Movie_Tab::Movie_Tab(App* i_app, QListWidgetItem* item) :
 	contents->addWidget(producer);
 	contents->addWidget(director);
 	contents->addWidget(rating);
-	contents->addWidget(source);
 	contents->addWidget(genre);
 	contents->addWidget(budget);
 	contents->addWidget(ww_box_office);
