@@ -1,5 +1,9 @@
 ```python
+ID[str, str] = id_ , name
+
 MOVIE_VIEW {
+	"_id": id
+	"title": str
 	"premiere_date": str
 	"duration": int
 	"producer": str
@@ -9,16 +13,25 @@ MOVIE_VIEW {
 	"box_office": int
 
 	"genres": List[str]
-	"cast": List[str]
-	"reviews": List[User[str, str, int]] #(Username, Review Text, Score)
+	"cast": List[ID(str, str)]
+	"reviews": List[User[ID(str, str), str, int]] #(ID(id_, Username), Review Text, Score)
 }
-PRODUCER_VIEW
-ACTOR_VIEW
+PRODUCER_VIEW {
+	"_id": id
+	"name": str
+	"movies": List[ID(str, str)]
+}
+ACTOR_VIEW {
+	"_id": id
+	"name": str
+	"age": int
+	"movies": List[ID(str, str)]
+}
 
-MOVIE_LISTINGS
-PRODUCER_LIST
-ACTOR_LIST
-USER_LIST
+MOVIE_LISTINGS: List[ID(str, str)] # Movie Name (and ID)
+PRODUCER_LIST: List[ID(str, str)] # Producer Name (and ID)
+ACTOR_LIST: List[ID(str, str)] # Actor Name (and ID)
+USER_LIST: List[ID(str, str)] # User Name (and ID)
 ```
 
 # MOVIE_VIEW
