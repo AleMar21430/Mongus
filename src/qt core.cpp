@@ -88,259 +88,6 @@ vector<int> List::visibleRange(const int& i_padding) const {
 	return range;
 }
 
-Tree_Item::Tree_Item(const QString& i_label, const QString& i_color, const QString& i_tooltip, const QString& i_metadata, Tree* i_parent) :
-	QTreeWidgetItem(i_parent)
-{
-	const QStringList colorValues = i_color.split(" ", Qt::SplitBehaviorFlags::SkipEmptyParts);
-	setForeground(0, QColor(colorValues[0].toInt(), colorValues[1].toInt(), colorValues[2].toInt()));
-	setToolTip(0, i_tooltip);
-	setText(0, i_label);
-	setWhatsThis(0, "Parent");
-
-	setForeground(1, QColor(140, 140, 140));
-	setText(1, i_metadata);
-}
-
-Tree_Item::Tree_Item(const QString& i_label, const QString& i_color, const QString& i_tooltip, const uint32_t& i_metadata, Tree* i_parent) :
-	QTreeWidgetItem(i_parent)
-{
-	const QStringList colorValues = i_color.split(" ", Qt::SplitBehaviorFlags::SkipEmptyParts);
-	setForeground(0, QColor(colorValues[0].toInt(), colorValues[1].toInt(), colorValues[2].toInt()));
-	setToolTip(0, i_tooltip);
-	setText(0, i_label);
-	setWhatsThis(0, "Parent");
-
-	setForeground(1, QColor(140, 140, 140));
-	setText(1, QString::fromStdString(to_string(i_metadata)));
-}
-
-Tree_Item::Tree_Item(const QString& i_label, const QString& i_color, const QString& i_tooltip, const QString& i_metadata, Tree_Item* i_parent) :
-	QTreeWidgetItem(i_parent)
-{
-	const QStringList colorValues = i_color.split(" ", Qt::SplitBehaviorFlags::SkipEmptyParts);
-	setForeground(0, QColor(colorValues[0].toInt(), colorValues[1].toInt(), colorValues[2].toInt()));
-	setToolTip(0, i_tooltip);
-	setText(0, i_label);
-	setWhatsThis(0, "Parent");
-
-	setForeground(1, QColor(140, 140, 140));
-	setText(1, i_metadata);
-}
-
-Tree_Item::Tree_Item(const QString& i_label, const QString& i_color, const QString& i_tooltip, const uint32_t& i_metadata, Tree_Item* i_parent) :
-	QTreeWidgetItem(i_parent)
-{
-	const QStringList colorValues = i_color.split(" ", Qt::SplitBehaviorFlags::SkipEmptyParts);
-	setForeground(0, QColor(colorValues[0].toInt(), colorValues[1].toInt(), colorValues[2].toInt()));
-	setToolTip(0, i_tooltip);
-	setText(0, i_label);
-	setWhatsThis(0, "Parent");
-
-	setForeground(1, QColor(140, 140, 140));
-	setText(1, QString::fromStdString(to_string(i_metadata)));
-}
-
-void Tree_Item::clear() {
-	while (childCount() > 0)
-		takeChild(0);
-}
-
-Tree_Filter_Item::Tree_Filter_Item(const QString& i_label, const QString& i_color, const Qt::CheckState& i_state, const QString& i_tooltip, const QString& i_metadata, Tree* i_parent) :
-	Tree_Item(i_label, i_color, i_tooltip, i_metadata, i_parent)
-{
-	setFlags(flags() | Qt::ItemFlag::ItemIsUserCheckable | Qt::ItemFlag::ItemIsUserTristate);
-	setCheckState(0, i_state);
-	setWhatsThis(0, "Filter");
-}
-
-Tree_Filter_Item::Tree_Filter_Item(const QString& i_label, const QString& i_color, const Qt::CheckState& i_state, const QString& i_tooltip, const uint32_t& i_metadata, Tree* i_parent) :
-	Tree_Item(i_label, i_color, i_tooltip, i_metadata, i_parent)
-{
-	setFlags(flags() | Qt::ItemFlag::ItemIsUserCheckable | Qt::ItemFlag::ItemIsUserTristate);
-	setCheckState(0, i_state);
-	setWhatsThis(0, "Filter");
-}
-
-Tree_Filter_Item::Tree_Filter_Item(const QString& i_label, const QString& i_color, const Qt::CheckState& i_state, const QString& i_tooltip, const QString& i_metadata, Tree_Item* i_parent) :
-	Tree_Item(i_label, i_color, i_tooltip, i_metadata, i_parent)
-{
-	setFlags(flags() | Qt::ItemFlag::ItemIsUserCheckable | Qt::ItemFlag::ItemIsUserTristate);
-	setCheckState(0, i_state);
-	setWhatsThis(0, "Filter");
-}
-
-Tree_Filter_Item::Tree_Filter_Item(const QString& i_label, const QString& i_color, const Qt::CheckState& i_state, const QString& i_tooltip, const uint32_t& i_metadata, Tree_Item* i_parent) :
-	Tree_Item(i_label, i_color, i_tooltip, i_metadata, i_parent)
-{
-	setFlags(flags() | Qt::ItemFlag::ItemIsUserCheckable | Qt::ItemFlag::ItemIsUserTristate);
-	setCheckState(0, i_state);
-	setWhatsThis(0, "Filter");
-}
-
-Tree::Tree() :
-	QTreeWidget()
-{
-	setContentsMargins(0, 0, 0, 0);
-	setSelectionMode(QTreeWidget::SelectionMode::SingleSelection);
-	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	setItemDelegate(new BranchDelegate(this));
-	verticalScrollBar()->setSingleStep(10);
-	setAllColumnsShowFocus(true);
-	setHeaderHidden(true);
-	setIndentation(0);
-	setColumnCount(1);
-	
-	header()->setStretchLastSection(false);
-	header()->setSectionResizeMode(0, QHeaderView::ResizeMode::Stretch);
-	header()->setSectionResizeMode(1, QHeaderView::ResizeMode::ResizeToContents);
-
-	filter_active = false;
-	expand_active = false;
-	item_state = nullptr;
-}
-
-vector<QString> Tree::getCheckedStates() const {
-	vector<QString> labels;
-	for (int i = 0; i < topLevelItemCount(); ++i) {
-		for (int j = 0; j < topLevelItem(i)->childCount(); ++j) {
-			QTreeWidgetItem* item = topLevelItem(i)->child(j);
-			if (item && item->whatsThis(0) == "Filter" && item->checkState(0) == Qt::CheckState::Checked) {
-				labels.push_back(item->text(0));
-			}
-		}
-	}
-	return labels;
-}
-
-vector<QString> Tree::getUnCheckedStates() const {
-	vector<QString> labels;
-	for (int i = 0; i < topLevelItemCount(); ++i) {
-		for (int j = 0; j < topLevelItem(i)->childCount(); ++j) {
-			QTreeWidgetItem* item = topLevelItem(i)->child(j);
-			if (item && item->whatsThis(0) == "Filter" && item->checkState(0) == Qt::CheckState::PartiallyChecked) {
-				labels.push_back(item->text(0));
-			}
-		}
-	}
-	return labels;
-}
-
-int Tree::count() const {
-	int count = topLevelItemCount();
-	for (int i = 0; i < topLevelItemCount(); ++i) {
-		count += topLevelItem(i)->childCount();
-	}
-	return count;
-}
-
-vector<QTreeWidgetItem*> Tree::topLevelItems() const {
-	vector<QTreeWidgetItem*> items;
-	for (int i = 0; i < topLevelItemCount(); ++i) {
-		items.push_back(topLevelItem(i));
-	}
-	return items;
-}
-
-void Tree::modifyFilters(const bool& i_inverted, QTreeWidgetItem* i_item) {
-	if (i_inverted) {
-		if (i_item->checkState(0) == Qt::Unchecked)
-			i_item->setCheckState(0, Qt::PartiallyChecked);
-		else if (i_item->checkState(0) == Qt::Checked)
-			i_item->setCheckState(0, Qt::Unchecked);
-		else
-			i_item->setCheckState(0, Qt::Checked);
-	}
-	else {
-		if (i_item->checkState(0) == Qt::Unchecked)
-			i_item->setCheckState(0, Qt::Checked);
-		else if (i_item->checkState(0) == Qt::Checked)
-			i_item->setCheckState(0, Qt::PartiallyChecked);
-		else
-			i_item->setCheckState(0, Qt::Unchecked);
-	}
-}
-
-void Tree::mousePressEvent(QMouseEvent* i_event) {
-	QTreeWidget::mousePressEvent(i_event);
-	QTreeWidgetItem* item = itemAt(i_event->pos());
-
-	if (item) {
-		item_state = currentItem();
-		if (item_state->whatsThis(0) == "Filter") {
-			setSelectionMode(QTreeWidget::SelectionMode::ExtendedSelection);
-			if (i_event->modifiers() == Qt::KeyboardModifier::AltModifier || i_event->modifiers() == (Qt::KeyboardModifier::ShiftModifier | Qt::KeyboardModifier::AltModifier))
-				modifyFilters(true, item_state);
-			else
-				modifyFilters(false, item_state);
-			selected_list.append(item);
-			filter_active = true;
-		}
-		else if (item_state->whatsThis(0) == "Parent") {
-			setSelectionMode(QTreeWidget::SelectionMode::SingleSelection);
-			item_state->setExpanded(!item_state->isExpanded());
-			selected_list.append(item);
-			expand_active = true;
-		}
-	}
-}
-
-void Tree::mouseMoveEvent(QMouseEvent* i_event) {
-	QTreeWidget::mouseMoveEvent(i_event);
-	QTreeWidgetItem* item = itemAt(i_event->pos());
-
-	if (item && item_state && filter_active && !selected_list.contains(item) && item->whatsThis(0) == "Filter") {
-		if (i_event->modifiers() == (Qt::KeyboardModifier::ShiftModifier | Qt::KeyboardModifier::AltModifier))
-			modifyFilters(true, item);
-		else if (i_event->modifiers() == Qt::KeyboardModifier::ShiftModifier)
-			modifyFilters(false, item);
-		else
-			item->setCheckState(0, item_state->checkState(0));
-		selected_list.append(item);
-	}
-	else if (item && item_state && expand_active && !selected_list.contains(item) && item->whatsThis(0) == "Parent") {
-		item->setExpanded(item_state->isExpanded());
-		selected_list.append(item);
-	}
-}
-
-void Tree::mouseReleaseEvent(QMouseEvent* i_event) {
-	QTreeWidget::mouseReleaseEvent(i_event);
-	setSelectionMode(QTreeWidget::SelectionMode::SingleSelection);
-	clearSelection();
-	selected_list = QList<QTreeWidgetItem*>();
-	filter_active = false;
-	expand_active = false;
-	emit onMouseRelease();
-}
-
-void Tree::clearChildren() {
-	for (int i = topLevelItemCount() - 1; i >= 0; --i) {
-		topLevelItem(i)->takeChildren();
-	}
-}
-
-BranchDelegate::BranchDelegate(QObject* parent) :
-	QStyledItemDelegate(parent)
-{}
-
-void BranchDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
-	QStyleOptionViewItem opt = option;
-	if (index.column() == 0) {
-		opt.rect.adjust(opt.rect.height(), 0, 0, 0);
-	}
-
-	QStyledItemDelegate::paint(painter, opt, index);
-
-	if (index.column() == 0) {
-		QStyleOptionViewItem branch;
-		branch.rect = QRect(0, opt.rect.y(), opt.rect.height(), opt.rect.height());
-		branch.state = option.state;
-		const QWidget* widget = option.widget;
-		const QStyle* style = widget ? widget->style() : qApp->style();
-		style->drawPrimitive(QStyle::PE_IndicatorBranch, &branch, painter, widget);
-	}
-}
-
 Splitter::Splitter(const bool& i_vertical) {
 	setContentsMargins(0, 0, 0, 0);
 	setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
@@ -381,16 +128,46 @@ Button::Button() {
 	setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Preferred);
 }
 
+Button::Button(const QString& i_label) :
+	QPushButton(i_label)
+{
+	setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Preferred);
+}
+
+void Button::setFontSize(const int& size) {
+	setStyleSheet(styleSheet() + "font-size: " + QString::fromStdString(to_string(size) + "px"));
+}
+
 Text_Edit::Text_Edit() {
 	setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
 }
 
 Text_Stream::Text_Stream(QWidget* i_parent) : QTextBrowser(i_parent) {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	setTabStopDistance(38);
+	setTabStopDistance(40);
 }
 
 void Text_Stream::append(const QString& text) {
 	cerr << text.toStdString() << endl;
 	QTextBrowser::append(text);
+}
+
+Widget_List::Widget_List(const QString& title):
+	Linear_Contents()
+{
+	contents = new Linear_Contents();
+
+	scroll_area = new QScrollArea();
+	scroll_area->setWidget(contents);
+	scroll_area->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOn);
+
+	label = new Label(title);
+	label->setStyleSheet(styleSheet() + "font-size: 18px; background: rgb(15,15,15); ");
+
+	Linear_Contents::addWidget(label);
+	Linear_Contents::addWidget(scroll_area);
+}
+
+void Widget_List::addWidget(QWidget* widget) {
+	contents->addWidget(widget);
 }

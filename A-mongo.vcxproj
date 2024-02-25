@@ -145,7 +145,12 @@
     <ClCompile Include="src\frontend\settings.cpp" />
     <ClCompile Include="src\main window.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="src\qt core.cpp" />
+    <ClCompile Include="src\qt core.cpp">
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
+    </ClCompile>
     <ClCompile Include="src\threading.cpp" />
     <ClCompile Include="src\frontend\producer.cpp" />
     <ClCompile Include="src\frontend\statistics.cpp" />
