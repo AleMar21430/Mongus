@@ -334,9 +334,38 @@ pipeline.sort(make_document(
 ]
 ```
 ```cpp
+mongocxx::pipeline pipeline;
+
+pipeline.lookup(make_document(
+	kvp("from", "actores"),
+	kvp("localField", "actores"),
+	kvp("foreignField", "_id"),
+	kvp("as", "actores_detalle")
+));
+
+pipeline.lookup(make_document(
+	kvp("from", "staff_produccion"),
+	kvp("localField", "staff_produccion"),
+	kvp("foreignField", "_id"),
+	kvp("as", "staff_produccion_detalle")
+));
+
+pipeline.project(make_document(
+	kvp("titulo", 1),
+	kvp("anio_lanzamiento", 1),
+	kvp("actores_detalle.nombre", 1),
+	kvp("actores_detalle.fecha_nacimiento", 1),
+	kvp("actores_detalle.nacionalidad", 1),
+	kvp("staff_produccion_detalle.nombre", 1),
+	kvp("staff_produccion_detalle.cargo", 1)
+));
+
+pipeline.sort(make_document(
+	kvp("anio_lanzamiento", -1)
+));
 ```
 
-# Obtener el promedio de calificación de las películas por clasificación de edad:
+# AVG_SCORE_BY_AGE_GROUPS
 ```json
 [
 	{ $group: { _id: "$clasificacion_edad", promedio_calificacion: { $avg: "$resenas.calificacion"
@@ -346,9 +375,15 @@ pipeline.sort(make_document(
 ]
 ```
 ```cpp
+mongocxx::pipeline pipeline;
+
+pipeline.group(make_document(
+	kvp("_id", "$clasificacion_edad"),
+	kvp("promedio_calificacion", make_document(kvp("$avg", "$resenas.calificacion")))
+));
 ```
 
-# Cantidad de peliculas por genero
+# GENRE_FILTER_MOVIE_COUNT
 ```json
 [
 	{ $lookup: { from: "generos_cinematograficos", localField: "genero", foreignField: "_id", as: "genero_info"
@@ -366,9 +401,26 @@ pipeline.sort(make_document(
 ]
 ```
 ```cpp
+mongocxx::pipeline pipeline;
+
+pipeline.lookup(
+	"generos_cinematograficos",
+	"$genero",
+	"_id",
+	"genero_info"
+);
+
+pipeline.unwind("$genero_info");
+
+pipeline.group(make_document(
+	kvp("_id", "$genero_info.nombre_genero"),
+	kvp("cantidad", make_document(kvp("$sum", 1)))
+));
+
+pipeline.sort(make_document(kvp("cantidad", -1)));
 ```
 
-# Actores con las peliculas que han tenido
+# ACTOR_VIEW
 ```json
 [
 	{
@@ -388,4 +440,17 @@ pipeline.sort(make_document(
 ]
 ```
 ```cpp
+mongocxx::pipeline pipeline;
+
+pipeline.lookup(
+	"peliculas",
+	"peliculas_participadas",
+	"_id",
+	"peliculas_participadas"
+);
+
+pipeline.project(make_document(
+		kvp("nombre", 1),
+		kvp("peliculas_participadas.titulo", 1)
+));
 ```
