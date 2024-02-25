@@ -54,7 +54,7 @@ void Mongo_Thread::processWork(const Mongo_Query& work) {
 				kvp("foreignField", "casa_productora"),
 				kvp("as", "peliculas_detalle")
 			)
-			});
+		});
 		pipeline.project({
 			make_document(
 				kvp("nombre", 1),
@@ -62,7 +62,7 @@ void Mongo_Thread::processWork(const Mongo_Query& work) {
 				kvp("peliculas_detalle.titulo", 1),
 				kvp("peliculas_detalle.anio_lanzamiento", 1)
 			)
-			});
+		});
 
 		mongocxx::cursor mongo_result = collection.aggregate(pipeline);
 

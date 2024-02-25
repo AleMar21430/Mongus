@@ -1,35 +1,318 @@
 # MOVIE_VIEW
 ```json
-[{"$lookup": {"from": "actores", "localField": "actores", "foreignField": "_id", "as": "actores_detalle"}}, {"$lookup": {"from": "staff_produccion", "localField": "staff_produccion", "foreignField": "_id", "as": "staff_produccion_detalle"}}, {"$project": {"titulo": 1, "anio_lanzamiento": 1, "actores_detalle.nombre": 1, "actores_detalle.fecha_nacimiento": 1, "actores_detalle.nacionalidad": 1, "staff_produccion_detalle.nombre": 1, "staff_produccion_detalle.cargo": 1}}]
+[
+	{
+		"$lookup": {
+			"from": "actores",
+			"localField": "actores",
+			"foreignField": "_id",
+			"as": "actores_detalle"
+		}
+	},
+	{
+		"$lookup": {
+			"from": "staff_produccion",
+			"localField": "staff_produccion",
+			"foreignField": "_id",
+			"as": "staff_produccion_detalle"
+		}
+	},
+	{
+		"$project": {
+			"titulo": 1,
+			"anio_lanzamiento": 1,
+			"actores_detalle.nombre": 1,
+			"actores_detalle.fecha_nacimiento": 1,
+			"actores_detalle.nacionalidad": 1,
+			"staff_produccion_detalle.nombre": 1,
+			"staff_produccion_detalle.cargo": 1
+		}
+	}
+]
 ```
+```cpp
+```
+
 # MOVIE_LISTINGS
 ```json
-[{"$match": {"en_cartelera": true}}, {"$lookup": {"from": "actores", "localField": "actores", "foreignField": "_id", "as": "actores_detalle"}}, {"$lookup": {"from": "premios", "localField": "premios", "foreignField": "_id", "as": "premios_detalle"}}, {"$lookup": {"from": "resenas", "localField": "resenas", "foreignField": "_id", "as": "resenas_detalle"}}, {"$lookup": {"from": "staff_produccion", "localField": "staff_produccion", "foreignField": "_id", "as": "staff_produccion_detalle"}}, {"$project": {"titulo": 1, "anio_lanzamiento": 1, "actores_detalle": {"nombre": 1, "fecha_nacimiento": 1, "nacionalidad": 1}, "premios_detalle": {"nombre_premio": 1, "anno": 1, "categoria": 1}, "resenas_detalle": {"comentario": 1, "calificacion": 1, "fecha_resena": 1}, "staff_produccion_detalle": {"nombre": 1, "cargo": 1}}}]
+[
+	{
+		"$match": {
+			"en_cartelera": true
+		}
+	},
+	{
+		"$lookup": {
+			"from": "actores",
+			"localField": "actores",
+			"foreignField": "_id",
+			"as": "actores_detalle"
+		}
+	},
+	{
+		"$lookup": {
+			"from": "premios",
+			"localField": "premios",
+			"foreignField": "_id",
+			"as": "premios_detalle"
+		}
+	},
+	{
+		"$lookup": {
+			"from": "resenas",
+			"localField": "resenas",
+			"foreignField": "_id",
+			"as": "resenas_detalle"
+		}
+	},
+	{
+		"$lookup": {
+			"from": "staff_produccion",
+			"localField": "staff_produccion",
+			"foreignField": "_id",
+			"as": "staff_produccion_detalle"
+		}
+	},
+	{
+		"$project": {
+			"titulo": 1,
+			"anio_lanzamiento": 1,
+			"actores_detalle": {
+				"nombre": 1,
+				"fecha_nacimiento": 1,
+				"nacionalidad": 1
+			},
+			"premios_detalle": {
+				"nombre_premio": 1,
+				"anno": 1,
+				"categoria": 1
+			},
+			"resenas_detalle": {
+				"comentario": 1,
+				"calificacion": 1,
+				"fecha_resena": 1
+			},
+			"staff_produccion_detalle": {
+				"nombre": 1,
+				"cargo": 1
+			}
+		}
+	}
+]
 ```
+```cpp
+mongocxx::pipeline pipeline{};
+
+pipeline.match(make_document(kvp("en_cartelera", true)));
+
+pipeline.lookup(make_document(
+	kvp("from", "actores"),
+	kvp("localField", "actores"),
+	kvp("foreignField", "_id"),
+	kvp("as", "actores_detalle")
+));
+
+pipeline.lookup(make_document(
+	kvp("from", "premios"),
+	kvp("localField", "premios"),
+	kvp("foreignField", "_id"),
+	kvp("as", "premios_detalle")
+));
+
+pipeline.lookup(make_document(
+	kvp("from", "resenas"),
+	kvp("localField", "resenas"),
+	kvp("foreignField", "_id"),
+	kvp("as", "resenas_detalle")
+));
+
+pipeline.lookup(make_document(
+	kvp("from", "staff_produccion"),
+	kvp("localField", "staff_produccion"),
+	kvp("foreignField", "_id"),
+	kvp("as", "staff_produccion_detalle")
+));
+
+pipeline.project(make_document(
+	kvp("titulo", 1),
+	kvp("anio_lanzamiento", 1),
+	kvp("actores_detalle", make_document(
+		kvp("nombre", 1),
+		kvp("fecha_nacimiento", 1),
+		kvp("nacionalidad", 1)
+	)),
+	kvp("premios_detalle", make_document(
+		kvp("nombre_premio", 1),
+		kvp("anno", 1),
+		kvp("categoria", 1)
+	)),
+	kvp("resenas_detalle", make_document(
+		kvp("comentario", 1),
+		kvp("calificacion", 1),
+		kvp("fecha_resena", 1)
+	)),
+	kvp("staff_produccion_detalle", make_document(
+		kvp("nombre", 1),
+		kvp("cargo", 1)
+	))
+));
+```
+
 # PRODUCER_VIEW
 ```json
-[{"$lookup": {"from": "peliculas", "localField": "_id", "foreignField": "casa_productora", "as": "peliculas_detalle"}}, {"$project": {"nombre": 1, "pais": 1, "peliculas_detalle.titulo": 1, "peliculas_detalle.anio_lanzamiento": 1}}]
+[
+	{
+		"$lookup": {
+			"from": "peliculas",
+			"localField": "_id",
+			"foreignField": "casa_productora",
+			"as": "peliculas_detalle"
+		}
+	},
+	{
+		"$project": {
+			"nombre": 1,
+			"pais": 1,
+			"peliculas_detalle.titulo": 1,
+			"peliculas_detalle.anio_lanzamiento": 1
+		}
+	}
+]
+```
+```cpp
 ```
 
-
 # Query de ordenamiento:
-Ordenamiento ascendente
-db.peliculas.aggregate([{"$lookup": {"from": "actores", "localField": "actores", "foreignField": "_id", "as": "actores_detalle"}}, {"$lookup": {"from": "staff_produccion", "localField": "staff_produccion", "foreignField": "_id", "as": "staff_produccion_detalle"}}, {"$project": {"titulo": 1, "anio_lanzamiento": 1, "actores_detalle.nombre": 1, "actores_detalle.fecha_nacimiento": 1, "actores_detalle.nacionalidad": 1, "staff_produccion_detalle.nombre": 1, "staff_produccion_detalle.cargo": 1}}, {"$sort": {"anio_lanzamiento": 1}}])
-Ordenamiento Descendente
-db.peliculas.aggregate([{"$lookup": {"from": "actores", "localField": "actores", "foreignField": "_id", "as": "actores_detalle"}}, {"$lookup": {"from": "staff_produccion", "localField": "staff_produccion", "foreignField": "_id", "as": "staff_produccion_detalle"}}, {"$project": {"titulo": 1, "anio_lanzamiento": 1, "actores_detalle.nombre": 1, "actores_detalle.fecha_nacimiento": 1, "actores_detalle.nacionalidad": 1, "staff_produccion_detalle.nombre": 1, "staff_produccion_detalle.cargo": 1}}, {"$sort": {"anio_lanzamiento": -1}}])
+### Ordenamiento ascendente
+```json
+[
+	{
+		"$lookup": {
+			"from": "actores",
+			"localField": "actores",
+			"foreignField": "_id",
+			"as": "actores_detalle"
+		}
+	},
+	{
+		"$lookup": {
+			"from": "staff_produccion",
+			"localField": "staff_produccion",
+			"foreignField": "_id",
+			"as": "staff_produccion_detalle"
+		}
+	},
+	{
+		"$project": {
+			"titulo": 1,
+			"anio_lanzamiento": 1,
+			"actores_detalle.nombre": 1,
+			"actores_detalle.fecha_nacimiento": 1,
+			"actores_detalle.nacionalidad": 1,
+			"staff_produccion_detalle.nombre": 1,
+			"staff_produccion_detalle.cargo": 1
+		}
+	},
+	{
+		"$sort": {
+			"anio_lanzamiento": 1
+		}
+	}
+]
+```
+```cpp
+```
 
+### Ordenamiento Descendente
+```json
+[
+	{
+		"$lookup": {
+			"from": "actores",
+			"localField": "actores",
+			"foreignField": "_id",
+			"as": "actores_detalle"
+		}
+	},
+	{
+		"$lookup": {
+			"from": "staff_produccion",
+			"localField": "staff_produccion",
+			"foreignField": "_id",
+			"as": "staff_produccion_detalle"
+		}
+	},
+	{
+		"$project": {
+			"titulo": 1,
+			"anio_lanzamiento": 1,
+			"actores_detalle.nombre": 1,
+			"actores_detalle.fecha_nacimiento": 1,
+			"actores_detalle.nacionalidad": 1,
+			"staff_produccion_detalle.nombre": 1,
+			"staff_produccion_detalle.cargo": 1
+		}
+	},
+	{
+		"$sort": {
+			"anio_lanzamiento": -1
+		}
+	}
+]
+```
+```cpp
+```
 
-Obtener el promedio de calificación de las películas por clasificación de edad:
-db.peliculas.aggregate([{ $group: { _id: "$clasificacion_edad", promedio_calificacion: { $avg: "$resenas.calificacion" } } }])
+# Obtener el promedio de calificación de las películas por clasificación de edad:
+```json
+[
+	{ $group: { _id: "$clasificacion_edad", promedio_calificacion: { $avg: "$resenas.calificacion"
+			}
+		}
+	}
+]
+```
+```cpp
+```
 
+# Cantidad de peliculas por genero
+```json
+[
+	{ $lookup: { from: "generos_cinematograficos", localField: "genero", foreignField: "_id", as: "genero_info"
+		}
+	},
+	{ $unwind: "$genero_info"
+	},
+	{ $group: { _id: "$genero_info.nombre_genero", cantidad: { $sum: 1
+			}
+		}
+	},
+	{ $sort: { cantidad: -1
+		}
+	}
+]
+```
+```cpp
+```
 
-
-
-
-Cantidad de peliculas por genero
-db.peliculas.aggregate([{ $lookup: { from: "generos_cinematograficos", localField: "genero", foreignField: "_id", as: "genero_info" } }, { $unwind: "$genero_info" }, { $group: { _id: "$genero_info.nombre_genero", cantidad: { $sum: 1 } } }, { $sort: { cantidad: -1 } }])
-
-
-actores con las peliculas que han tenido
-db.actores.aggregate([{"$lookup": {"from": "peliculas", "localField": "peliculas_participadas", "foreignField": "_id", "as": "peliculas_participadas"}}, {"$project": {"nombre": 1, "peliculas_participadas.titulo": 1}}])
-
+# Actores con las peliculas que han tenido
+```json
+[
+	{
+		"$lookup": {
+			"from": "peliculas",
+			"localField": "peliculas_participadas",
+			"foreignField": "_id",
+			"as": "peliculas_participadas"
+		}
+	},
+	{
+		"$project": {
+			"nombre": 1,
+			"peliculas_participadas.titulo": 1
+		}
+	}
+]
+```
+```cpp
+```
