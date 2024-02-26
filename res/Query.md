@@ -1,12 +1,12 @@
 ```python
-ID[str, str] = id_ , name # ID siempre es el id de referencia y el nombre/titulo del objeto
+ID[str, str] = id_ , name #ID siempre es el id de referencia y el nombre/titulo del objeto
 
 MOVIE_VIEW params=(_id) {
 	"_id": id
 	"title": str
 	"premiere_date": str
 	"duration": int
-	"score": float
+	"score": float    # Se calcula en base a los scores de los reviews que tiene
 	"budget": int
 	"box_office": int
 	"producer": Producer_ID
@@ -30,7 +30,7 @@ ACTOR_VIEW params=(_id) {
 USER_VIEW params=(_id) {
 	"_id": id
 	"username": str
-	"reviews": List[Tuple[Movie_ID, str, int]]  #(Movie_ID, Review Text, Score)
+	"reviews": List[Tuple[Movie_ID, str, int]] #(Movie_ID, Review Text, Score)
 }
 SHOWING_VIEW params=(_id) {
 	"_id": id
