@@ -18,6 +18,7 @@ void Linear_Layout::clear() {
 Linear_Contents::Linear_Contents(const bool& Vertical, const int& Margins) :
 	QWidget()
 {
+	setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Preferred);
 	setContentsMargins(0, 0, 0, 0);
 	layout = new Linear_Layout(Vertical, Margins);
 	setLayout(layout);
@@ -159,6 +160,8 @@ Widget_List::Widget_List(const QString& title):
 
 	scroll_area = new QScrollArea();
 	scroll_area->setWidget(contents);
+	scroll_area->setWidgetResizable(true);
+	scroll_area->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Preferred);
 	scroll_area->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOn);
 
 	label = new Label(title);

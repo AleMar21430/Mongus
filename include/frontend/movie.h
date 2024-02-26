@@ -11,7 +11,7 @@ class Movie_Tab : public QMainWindow {
 public:
 	App* app;
 
-	Movie_Tab(App* i_app, QListWidgetItem* item);
+	Movie_Tab(App* i_app, const string& titulo);
 
 public slots:
 	void process(const json& data);

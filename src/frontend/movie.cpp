@@ -5,11 +5,10 @@
 #include "frontend/producer.h"
 #include "frontend/actor.h"
 
-Movie_Tab::Movie_Tab(App* i_app, QListWidgetItem* item) :
+Movie_Tab::Movie_Tab(App* i_app, const string& titulo) :
 	QMainWindow(),
 	app(i_app)
 {
-
 	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {
 		if (query.type == Mongo_Type::MOVIE_VIEW && query.request_id == app->mongo_request)
 			QMetaObject::invokeMethod(this, "process", Qt::QueuedConnection, Q_ARG(json, data));
@@ -17,7 +16,7 @@ Movie_Tab::Movie_Tab(App* i_app, QListWidgetItem* item) :
 
 	app->mongo_request++;
 	app->mongo_thread->cancelWork();
-	Mongo_Query work = Mongo_Query({ {"titulo", item->text().toStdString()}}, Mongo_Type::MOVIE_VIEW, app->mongo_request);
+	Mongo_Query work = Mongo_Query({ {"titulo", titulo}}, Mongo_Type::MOVIE_VIEW, app->mongo_request);
 	app->mongo_thread->queueWork(work);
 
 	showMaximized();
@@ -26,8 +25,6 @@ Movie_Tab::Movie_Tab(App* i_app, QListWidgetItem* item) :
 void Movie_Tab::process(const json& data) {
 	if (data.is_array() && !data.empty()) {
 		json json_data = data[0];
-
-		cerr << endl << endl << json_data.dump() << endl << endl;
 
 		Linear_Contents* contents = new Linear_Contents();
 		Label* title_widget = new Label(json_data.contains("titulo") ? "Title: " + QString::fromStdString(json_data["titulo"]) : "Title: Unknown");
@@ -48,9 +45,9 @@ void Movie_Tab::process(const json& data) {
 		if (json_data["casa_productora_detalle"].is_array()) {
 			for (const auto& entry : json_data["casa_productora_detalle"]) {
 				Button* json_data_item = new Button(QString::fromStdString(entry["nombre"]));
-				connect(json_data_item, &Button::clicked, [this]() {
-
-					});
+				connect(json_data_item, &Button::clicked, [this, entry]() {
+					Producer_Tab* producer = new Producer_Tab(app, entry["nombre"]);
+				});
 				producer_list->addWidget(json_data_item);
 			}
 		}

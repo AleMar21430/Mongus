@@ -6,10 +6,13 @@
 
 class App;
 
-class Producer_Tab : public Linear_Contents {
+class Producer_Tab : public QMainWindow {
 	Q_OBJECT
 public:
 	App* app;
 
-	Producer_Tab(App* i_app);
+	Producer_Tab(App* i_app, const string& nombre);
+
+public slots:
+	void process(const json& data);
 };

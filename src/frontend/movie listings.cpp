@@ -11,7 +11,7 @@ Movie_Listings_Tab::Movie_Listings_Tab(App* i_app) :
 	layout->addWidget(list);
 	connect(list->verticalScrollBar(), &QScrollBar::valueChanged, [this](int value) { loadThumbnails(); });
 	connect(list, &List::itemDoubleClicked, [this](QListWidgetItem* item) {
-		Movie_Tab* movie = new Movie_Tab(app, item);
+		Movie_Tab* movie = new Movie_Tab(app, item->text().toStdString());
 	});
 
 	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {

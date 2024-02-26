@@ -45,24 +45,25 @@ void Mongo_Thread::processWork(const Mongo_Query& work) {
 	emit logMsg("Mongo Thread Processing");
 
 	if (work.type == Mongo_Type::PRODUCER_VIEW) {
-		mongo::collection collection = database[work.query.at("collection")];
+		mongo::collection collection = database["casas_productoras"];
 		mongocxx::pipeline pipeline;
-		pipeline.lookup({
-			make_document(
-				kvp("from", "peliculas"),
-				kvp("localField", "_id"),
-				kvp("foreignField", "casa_productora"),
-				kvp("as", "peliculas_detalle")
-			)
-		});
-		pipeline.project({
-			make_document(
-				kvp("nombre", 1),
-				kvp("pais", 1),
-				kvp("peliculas_detalle.titulo", 1),
-				kvp("peliculas_detalle.anio_lanzamiento", 1)
-			)
-		});
+
+		pipeline.match(make_document(kvp("nombre", work.query.at("nombre"))));
+
+		pipeline.lookup(make_document(
+			kvp("from", "peliculas"),
+			kvp("localField", "_id"),
+			kvp("foreignField", "casa_productora"),
+			kvp("as", "peliculas_detalle")
+		));
+
+		pipeline.project(make_document(
+			kvp("nombre", 1),
+			kvp("pais", 1),
+			kvp("peliculas_detalle.titulo", 1),
+			kvp("peliculas_detalle.anio_lanzamiento", 1),
+			kvp("_id", 0)
+		));
 
 		mongocxx::cursor mongo_result = collection.aggregate(pipeline);
 
