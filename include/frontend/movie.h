@@ -13,5 +13,6 @@ public:
 
 	Movie_Tab(App* i_app, QListWidgetItem* item);
 
+public slots:
 	void process(const json& data);
 };

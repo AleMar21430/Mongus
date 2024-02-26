@@ -73,8 +73,91 @@ void Mongo_Thread::processWork(const Mongo_Query& work) {
 		emit result(work, json_data);
 	}
 
+	if (work.type == Mongo_Type::MOVIE_VIEW) {
+		mongo::collection collection = database["peliculas"];
+		mongocxx::pipeline pipeline;
+
+		cerr << work.query.at("titulo") << endl;
+
+		pipeline.match(make_document(kvp("titulo", work.query.at("titulo"))));
+
+		pipeline.lookup(make_document(
+			kvp("from", "actores"),
+			kvp("localField", "actores"),
+			kvp("foreignField", "_id"),
+			kvp("as", "actores_detalle")
+		));
+
+		pipeline.lookup(make_document(
+			kvp("from", "staff_produccion"),
+			kvp("localField", "staff_produccion"),
+			kvp("foreignField", "_id"),
+			kvp("as", "staff_produccion_detalle")
+		));
+
+		pipeline.lookup(make_document(
+			kvp("from", "generos_cinematograficos"),
+			kvp("localField", "genero"),
+			kvp("foreignField", "_id"),
+			kvp("as", "genero_detalle")
+		));
+
+		pipeline.lookup(make_document(
+			kvp("from", "taquilla"),
+			kvp("localField", "taquilla"),
+			kvp("foreignField", "_id"),
+			kvp("as", "taquilla_detalle")
+		));
+
+		pipeline.lookup(make_document(
+			kvp("from", "resenas"),
+			kvp("localField", "resenas"),
+			kvp("foreignField", "_id"),
+			kvp("as", "resenas_detalle")
+		));
+
+		pipeline.lookup(make_document(
+			kvp("from", "premios"),
+			kvp("localField", "premios"),
+			kvp("foreignField", "_id"),
+			kvp("as", "premios_detalle")
+		));
+
+		pipeline.lookup(make_document(
+			kvp("from", "casas_productoras"),
+			kvp("localField", "casa_productora"),
+			kvp("foreignField", "_id"),
+			kvp("as", "casa_productora_detalle")
+		));
+
+		pipeline.project(make_document(
+			kvp("_id", 1),
+			kvp("titulo", 1),
+			kvp("genero_detalle", 1),
+			kvp("director", 1),
+			kvp("anio_lanzamiento", 1),
+			kvp("sinopsis", 1),
+			kvp("clasificacion_edad", 1),
+			kvp("actores_detalle", 1),
+			kvp("taquilla_detalle", 1),
+			kvp("resenas_detalle", 1),
+			kvp("premios_detalle", 1),
+			kvp("staff_produccion_detalle", 1),
+			kvp("casa_productora_detalle", 1),
+			kvp("en_cartelera", 1)
+		));
+
+		mongocxx::cursor mongo_result = collection.aggregate(pipeline);
+
+		json json_data;
+		for (const bsoncxx::v_noabi::document::view& doc : mongo_result) {
+			json_data.push_back(json::parse(bsoncxx::to_json(doc)));
+		}
+		emit result(work, json_data);
+	}
+
 	if (work.type == Mongo_Type::MOVIE_LISTINGS) {
-		mongo::collection collection = database[work.query.at("collection")];
+		mongo::collection collection = database["peliculas"];
 		mongocxx::pipeline pipeline;
 
 		pipeline.match(make_document(kvp("en_cartelera", true)));

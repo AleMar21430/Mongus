@@ -12,54 +12,104 @@ Movie_Tab::Movie_Tab(App* i_app, QListWidgetItem* item) :
 
 	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {
 		if (query.type == Mongo_Type::MOVIE_VIEW && query.request_id == app->mongo_request)
-			process(data);
+			QMetaObject::invokeMethod(this, "process", Qt::QueuedConnection, Q_ARG(json, data));
 	});
 
 	app->mongo_request++;
 	app->mongo_thread->cancelWork();
-	Mongo_Query work = Mongo_Query(item->data(500).toString().toStdString(), Mongo_Type::MOVIE_VIEW, app->mongo_request);
+	Mongo_Query work = Mongo_Query({ {"titulo", item->text().toStdString()}}, Mongo_Type::MOVIE_VIEW, app->mongo_request);
 	app->mongo_thread->queueWork(work);
 
 	showMaximized();
 }
 
 void Movie_Tab::process(const json& data) {
-	Linear_Contents* contents = new Linear_Contents();
+	if (data.is_array() && !data.empty()) {
+		json json_data = data[0];
 
-	Label* title_widget = new Label("Title: " + QString::fromStdString(data["title"].dump()));
-	title_widget->setFontSize(25);
-	Label* premiere = new Label("Premiere Date: " + QString::fromStdString(data["premiere"].dump()));
-	Label* duration = new Label("Duration: " + QString::fromStdString(data["duration"].dump()));
-	Button* producer = new Button("Producer: " + QString::fromStdString(data["producer"].dump()));
-	Button* director = new Button("Director: " + QString::fromStdString(data["director"].dump()));
-	Label* rating = new Label("Rating: " + QString::fromStdString(data["rating"].dump()));
-	Label* genre = new Label("Genre: " + QString::fromStdString(data["genre"].dump()));
-	Label* budget = new Label("Budget: " + QString::fromStdString(data["budget"].dump()));
-	Label* ww_box_office = new Label("Box Office: " + QString::fromStdString(data["ww_box_office"].dump()));
+		cerr << endl << endl << json_data.dump() << endl << endl;
 
-	Widget_List* cast_list = new Widget_List("Cast Members");
+		Linear_Contents* contents = new Linear_Contents();
+		Label* title_widget = new Label(json_data.contains("titulo") ? "Title: " + QString::fromStdString(json_data["titulo"]) : "Title: Unknown");
+		title_widget->setFontSize(25);
+		Label* premiere = new Label(json_data.contains("anio_lanzamiento") ? "Premiere Date: " + QString::fromStdString(json_data["anio_lanzamiento"]) : "Premiere Date: Unknown");
 
-	if (data["cast"].is_array()) {
-		for (const auto& entry : data["cast"]) {
-			Button* cast = new Button(QString::fromStdString(entry["name"].dump()));
-			connect(cast, &Button::clicked, [this]() {
+		Label* duration = new Label(json_data.contains("duratcon") ? "Duration: " + QString::fromStdString(json_data["duracion"]) : "Duration: Unknown");
+		Button* director = new Button(json_data.contains("director") ? "Director: " + QString::fromStdString(json_data["director"]) : "Director: Unknown");
+		Label* rating = new Label(json_data.contains("score") ? "Score: " + QString::fromStdString(json_data["score"]) : "Score: Unknown");
 
-			});
-			cast_list->addWidget(cast);
+		Widget_List* producer_list = new Widget_List("Producers");
+		Widget_List* genre_list = new Widget_List("Genres");
+		Widget_List* award_list = new Widget_List("Awards");
+		Widget_List* staff_list = new Widget_List("Staff Members");
+		Widget_List* cast_list = new Widget_List("Cast Members");
+		Widget_List* review_list = new Widget_List("Reviews");
+
+		if (json_data["casa_productora_detalle"].is_array()) {
+			for (const auto& entry : json_data["casa_productora_detalle"]) {
+				Button* json_data_item = new Button(QString::fromStdString(entry["nombre"]));
+				connect(json_data_item, &Button::clicked, [this]() {
+
+					});
+				producer_list->addWidget(json_data_item);
+			}
 		}
+		if (json_data["genero_detalle"].is_array()) {
+			for (const auto& entry : json_data["genero_detalle"]) {
+				Button* json_data_item = new Button(QString::fromStdString(entry["nombre_genero"]));
+				connect(json_data_item, &Button::clicked, [this]() {
+
+					});
+				genre_list->addWidget(json_data_item);
+			}
+		}
+		if (json_data["premios_detalle"].is_array()) {
+			for (const auto& entry : json_data["premios_detalle"]) {
+				Button* json_data_item = new Button(QString::fromStdString(entry["nombre_premio"]));
+				connect(json_data_item, &Button::clicked, [this]() {
+
+					});
+				award_list->addWidget(json_data_item);
+			}
+		}
+		if (json_data["staff_produccion_detalle"].is_array()) {
+			for (const auto& entry : json_data["staff_produccion_detalle"]) {
+				Button* json_data_item = new Button(QString::fromStdString(entry["nombre"]));
+				connect(json_data_item, &Button::clicked, [this]() {
+
+					});
+				staff_list->addWidget(json_data_item);
+			}
+		}
+		if (json_data["actores_detalle"].is_array()) {
+			for (const auto& entry : json_data["actores_detalle"]) {
+				Button* json_data_item = new Button(QString::fromStdString(entry["nombre"]));
+				connect(json_data_item, &Button::clicked, [this]() {
+
+					});
+				cast_list->addWidget(json_data_item);
+			}
+		}
+		if (json_data["resenas_detalle"].is_array()) {
+			for (const auto& entry : json_data["resenas_detalle"]) {
+				Label* json_data_item = new Label(QString::fromStdString(entry["comentario"]));
+				review_list->addWidget(json_data_item);
+			}
+		}
+
+		contents->addWidget(title_widget);
+		contents->addWidget(premiere);
+		contents->addWidget(duration);
+		contents->addWidget(director);
+		contents->addWidget(rating);
+		contents->addWidget(producer_list);
+		contents->addWidget(genre_list);
+		contents->addWidget(award_list);
+		contents->addWidget(staff_list);
+		contents->addWidget(cast_list);
+		contents->addWidget(review_list);
+
+		setCentralWidget(contents);
+		setWindowTitle(json_data.contains("titulo") ? QString::fromStdString(json_data["titulo"]) : "Unknown");
 	}
-
-	contents->addWidget(title_widget);
-	contents->addWidget(premiere);
-	contents->addWidget(duration);
-	contents->addWidget(producer);
-	contents->addWidget(director);
-	contents->addWidget(rating);
-	contents->addWidget(genre);
-	contents->addWidget(budget);
-	contents->addWidget(ww_box_office);
-	contents->addWidget(cast_list);
-
-	setCentralWidget(contents);
-	setWindowTitle(QString::fromStdString(data["title"].dump()));
 }
