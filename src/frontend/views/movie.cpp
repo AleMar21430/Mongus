@@ -1,22 +1,22 @@
-#include "frontend/movie.h"
+#include "frontend/views/movie.h"
 
 #include "main window.h"
 
-#include "frontend/producer.h"
-#include "frontend/actor.h"
+#include "frontend/views/producer.h"
+#include "frontend/views/actor.h"
 
 Movie_Tab::Movie_Tab(App* i_app, const string& titulo) :
 	QMainWindow(),
 	app(i_app)
 {
 	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {
-		if (query.type == Mongo_Type::MOVIE_VIEW && query.request_id == app->mongo_request)
+		if (query.type == Mongo_Type::MOVIE && query.request_id == app->mongo_request)
 			QMetaObject::invokeMethod(this, "process", Qt::QueuedConnection, Q_ARG(json, data));
 	});
 
 	app->mongo_request++;
 	app->mongo_thread->cancelWork();
-	Mongo_Query work = Mongo_Query({ {"titulo", titulo}}, Mongo_Type::MOVIE_VIEW, app->mongo_request);
+	Mongo_Query work = Mongo_Query({ {"titulo", titulo}}, Mongo_Type::MOVIE, app->mongo_request);
 	app->mongo_thread->queueWork(work);
 
 	showMaximized();

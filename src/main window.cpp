@@ -64,15 +64,13 @@ int App::cleanup() {
 Main_Window::Main_Window(App* app) :
 	app(app)
 {
-	Movie_Listings_Tab* movie_listings_tab = new Movie_Listings_Tab(app);
-	Statistics_Tab* statistics_tab = new Statistics_Tab(app);
+	Movies_Tab* movie_listings_tab = new Movies_Tab(app);
 	Settings_Tab* settings_tab = new Settings_Tab(app);
 	Showings_Tab* showings_tab = new Showings_Tab(app);
 
 	tabs = new Tabs();
 	tabs->addTab(movie_listings_tab, "Movie Listings");
 	tabs->addTab(showings_tab, "Movie Showings");
-	tabs->addTab(statistics_tab, "Statistics");
 	tabs->addTab(settings_tab, "Settings");
 
 	Splitter* splitter = new Splitter(true);
@@ -90,7 +88,7 @@ Main_Window::Main_Window(App* app) :
 
 void Main_Window::changeView(const int& row) {
 	if (row == 0) {
-		dynamic_cast<Movie_Listings_Tab*>(tabs->currentWidget())->activate();
+		dynamic_cast<Movies_Tab*>(tabs->currentWidget())->activate();
 	}
 }
 

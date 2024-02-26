@@ -137,12 +137,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\frontend\actor.cpp" />
-    <ClCompile Include="src\frontend\add showing.cpp" />
-    <ClCompile Include="src\frontend\showings.cpp" />
-    <ClCompile Include="src\frontend\movie listings.cpp" />
-    <ClCompile Include="src\frontend\movie.cpp" />
+    <ClCompile Include="src\frontend\views\actor.cpp" />
+    <ClCompile Include="src\frontend\views\showing.cpp" />
+    <ClCompile Include="src\frontend\lists\actors.cpp" />
+    <ClCompile Include="src\frontend\lists\movies.cpp" />
+    <ClCompile Include="src\frontend\lists\producers.cpp" />
+    <ClCompile Include="src\frontend\lists\showings.cpp" />
+    <ClCompile Include="src\frontend\views\movie.cpp" />
     <ClCompile Include="src\frontend\settings.cpp" />
+    <ClCompile Include="src\frontend\lists\users.cpp" />
     <ClCompile Include="src\main window.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\qt core.cpp">
@@ -152,21 +155,22 @@
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
     </ClCompile>
     <ClCompile Include="src\threading.cpp" />
-    <ClCompile Include="src\frontend\producer.cpp" />
-    <ClCompile Include="src\frontend\statistics.cpp" />
-    <ClCompile Include="src\frontend\user.cpp" />
+    <ClCompile Include="src\frontend\views\producer.cpp" />
+    <ClCompile Include="src\frontend\views\user.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="include\frontend\showings.h" />
-    <QtMoc Include="include\frontend\statistics.h" />
-    <QtMoc Include="include\frontend\user.h" />
-    <QtMoc Include="include\frontend\movie listings.h" />
-    <QtMoc Include="include\frontend\producer.h" />
+    <QtMoc Include="include\frontend\lists\showings.h" />
+    <QtMoc Include="include\frontend\views\user.h" />
+    <QtMoc Include="include\frontend\views\producer.h" />
     <QtMoc Include="include\threading.h" />
     <QtMoc Include="include\frontend\settings.h" />
-    <QtMoc Include="include\frontend\movie.h" />
-    <QtMoc Include="include\frontend\add showing.h" />
-    <QtMoc Include="include\frontend\actor.h" />
+    <QtMoc Include="include\frontend\views\movie.h" />
+    <QtMoc Include="include\frontend\views\actor.h" />
+    <QtMoc Include="include\frontend\lists\actors.h" />
+    <QtMoc Include="include\frontend\lists\movies.h" />
+    <QtMoc Include="include\frontend\lists\producers.h" />
+    <QtMoc Include="include\frontend\lists\users.h" />
+    <QtMoc Include="include\frontend\views\showing.h" />
     <ClInclude Include="include\include.h" />
     <QtMoc Include="include\main window.h" />
     <QtMoc Include="include\qt core.h" />

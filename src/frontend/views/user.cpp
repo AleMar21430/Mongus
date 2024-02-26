@@ -1,28 +1,27 @@
-#include "frontend/producer.h"
+#include "frontend/views/user.h"
 
 #include "main window.h"
 
-#include "frontend/movie.h"
-#include "frontend/actor.h"
+#include "frontend/views/movie.h"
 
-Producer_Tab::Producer_Tab(App* i_app, const string& nombre) :
+User_Tab::User_Tab(App* i_app, const string& nombre) :
 	QMainWindow(),
 	app(i_app)
 {
 	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {
-		if (query.type == Mongo_Type::PRODUCER_VIEW && query.request_id == app->mongo_request)
+		if (query.type == Mongo_Type::USER && query.request_id == app->mongo_request)
 			QMetaObject::invokeMethod(this, "process", Qt::QueuedConnection, Q_ARG(json, data));
 		});
 
 	app->mongo_request++;
 	app->mongo_thread->cancelWork();
-	Mongo_Query work = Mongo_Query({ {"nombre", nombre} }, Mongo_Type::PRODUCER_VIEW, app->mongo_request);
+	Mongo_Query work = Mongo_Query({ {"nombre", nombre} }, Mongo_Type::USER, app->mongo_request);
 	app->mongo_thread->queueWork(work);
 
 	showMaximized();
 }
 
-void Producer_Tab::process(const json& data) {
+void User_Tab::process(const json& data) {
 	if (data.is_array() && !data.empty()) {
 		json json_data = data[0];
 
