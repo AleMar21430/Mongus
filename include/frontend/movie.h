@@ -12,4 +12,6 @@ public:
 	App* app;
 
 	Movie_Tab(App* i_app, QListWidgetItem* item);
+
+	void process(const json& data);
 };

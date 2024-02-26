@@ -9,25 +9,45 @@ Movie_Tab::Movie_Tab(App* i_app, QListWidgetItem* item) :
 	QMainWindow(),
 	app(i_app)
 {
+
+	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {
+		if (query.type == Mongo_Type::MOVIE_VIEW && query.request_id == app->mongo_request)
+			process(data);
+	});
+
+	app->mongo_request++;
+	app->mongo_thread->cancelWork();
+	Mongo_Query work = Mongo_Query(item->data(500).toString().toStdString(), Mongo_Type::MOVIE_VIEW, app->mongo_request);
+	app->mongo_thread->queueWork(work);
+
+	showMaximized();
+}
+
+void Movie_Tab::process(const json& data) {
 	Linear_Contents* contents = new Linear_Contents();
 
-	json data = json::parse(item->data(500).toString().toStdString());
-
-	Label* title_widget =  new Label(item->text());
+	Label* title_widget = new Label("Title: " + QString::fromStdString(data["title"].dump()));
 	title_widget->setFontSize(25);
-	Label* premiere =      new Label("Premiere Date: " + QString::fromStdString(data["anio_lanzamiento"].dump()));
-
-	Label* duration =      new Label ("Duration: " + QString::fromStdString(data["duration"].dump()));
-	Button* producer =     new Button("Producer: " + QString::fromStdString(data["producer"].dump()));
-	Button* director =     new Button("Director: " + QString::fromStdString(data["director"].dump()));
-	Label* rating =        new Label ("Rating: " + QString::fromStdString(data["rating"].dump()));
-	Label* genre =         new Label ("Genre: " + QString::fromStdString(data["genre"].dump()));
-	Label* budget =        new Label ("Budget: " + QString::fromStdString(data["budget"].dump()));
-	Label* ww_box_office = new Label ("Box Office: " + QString::fromStdString(data["ww_box_office"].dump()));
+	Label* premiere = new Label("Premiere Date: " + QString::fromStdString(data["premiere"].dump()));
+	Label* duration = new Label("Duration: " + QString::fromStdString(data["duration"].dump()));
+	Button* producer = new Button("Producer: " + QString::fromStdString(data["producer"].dump()));
+	Button* director = new Button("Director: " + QString::fromStdString(data["director"].dump()));
+	Label* rating = new Label("Rating: " + QString::fromStdString(data["rating"].dump()));
+	Label* genre = new Label("Genre: " + QString::fromStdString(data["genre"].dump()));
+	Label* budget = new Label("Budget: " + QString::fromStdString(data["budget"].dump()));
+	Label* ww_box_office = new Label("Box Office: " + QString::fromStdString(data["ww_box_office"].dump()));
 
 	Widget_List* cast_list = new Widget_List("Cast Members");
-	Label* cast =          new Label ("Cast: " + QString::fromStdString(data["cast"].dump()));
-	cast_list->addWidget(cast);
+
+	if (data["cast"].is_array()) {
+		for (const auto& entry : data["cast"]) {
+			Button* cast = new Button(QString::fromStdString(entry["name"].dump()));
+			connect(cast, &Button::clicked, [this]() {
+
+			});
+			cast_list->addWidget(cast);
+		}
+	}
 
 	contents->addWidget(title_widget);
 	contents->addWidget(premiere);
@@ -41,6 +61,5 @@ Movie_Tab::Movie_Tab(App* i_app, QListWidgetItem* item) :
 	contents->addWidget(cast_list);
 
 	setCentralWidget(contents);
-	setWindowTitle(item->text());
-	showMaximized();
+	setWindowTitle(QString::fromStdString(data["title"].dump()));
 }

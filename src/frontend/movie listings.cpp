@@ -21,8 +21,8 @@ Movie_Listings_Tab::Movie_Listings_Tab(App* i_app) :
 }
 
 void Movie_Listings_Tab::activate() {
+	//app->async_request++;
 	app->mongo_request++;
-	app->async_request++;
 	app->mongo_thread->cancelWork();
 	list->clear();
 	Mongo_Query work = Mongo_Query({ {"collection", "peliculas"} }, Mongo_Type::MOVIE_LISTINGS, app->mongo_request);
@@ -85,18 +85,15 @@ void Movie_Listings_Tab::loadThumbnails() {
 
 void Movie_Listings_Tab::process(const json& data) {
 	const QIcon loading = QIcon("./res/loading.png");
-	if (data.is_array()) {
-		for (const auto& entry : data) {
-			app->window->logMessage(QString::fromStdString(entry.dump()));
-			if (entry.contains("titulo")) {
-				QListWidgetItem* item = new QListWidgetItem();
-				item->setSizeHint(QSize(256, 300));
-				item->setTextAlignment(Qt::AlignmentFlag::AlignHCenter | Qt::AlignmentFlag::AlignBottom);
-				item->setText(QString::fromStdString(entry["titulo"].dump()));
-				item->setData(500, QString::fromStdString(entry.dump()));
-				item->setIcon(loading);
-				list->addItem(item);
-			}
-		}
+	for (const auto& entry : data) {
+		QListWidgetItem* item = new QListWidgetItem();
+		item->setSizeHint(QSize(256, 300));
+		item->setTextAlignment(Qt::AlignmentFlag::AlignHCenter | Qt::AlignmentFlag::AlignBottom);
+
+		item->setData(500, QString::fromStdString(entry["_id"].dump()));
+		item->setText(QString::fromStdString(entry["titulo"].dump()));
+
+		item->setIcon(loading);
+		list->addItem(item);
 	}
 }
