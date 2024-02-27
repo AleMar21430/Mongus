@@ -31,7 +31,7 @@ void User_Tab::process(const json& data) {
 		Label* email = new Label(json_data.contains("correo") ? "EMail: " + QString::fromStdString(json_data["correo"]) : "EMail: UNAVAILABLE");
 		Label* type = new Label(json_data.contains("tipo") ? "User Type: " + QString::fromStdString(json_data["tipo"]) : "User Type: UNAVAILABLE");
 
-		Widget_List* movie_list = new Widget_List("Producers");
+		//Widget_List* movie_list = new Widget_List("Reviews");
 
 		//if (json_data["peliculas_detalle"].is_array()) {
 		//	for (const auto& entry : json_data["peliculas_detalle"]) {

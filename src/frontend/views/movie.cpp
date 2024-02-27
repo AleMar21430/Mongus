@@ -5,6 +5,8 @@
 #include "frontend/views/producer.h"
 #include "frontend/views/actor.h"
 
+#include "frontend/views/review.h"
+
 Movie_Tab::Movie_Tab(App* i_app, const string& titulo) :
 	QMainWindow(),
 	app(i_app)
@@ -32,8 +34,7 @@ void Movie_Tab::process(const json& data) {
 		Label* premiere = new Label(json_data.contains("anio_lanzamiento") ? "Premiere Date: " + QString::fromStdString(json_data["anio_lanzamiento"]) : "Premiere Date: UNAVAILABLE");
 
 		Label* duration = new Label(json_data.contains("duratcon") ? "Duration: " + QString::fromStdString(json_data["duracion"]) : "Duration: UNAVAILABLE");
-		Button* director = new Button(json_data.contains("director") ? "Director: " + QString::fromStdString(json_data["director"]) : "Director: UNAVAILABLE");
-		director->setStyleProp("text-align: center;");
+		Label* director = new Label(json_data.contains("director") ? "Director: " + QString::fromStdString(json_data["director"]) : "Director: UNAVAILABLE");
 		Label* rating = new Label(json_data.contains("score") ? "Score: " + QString::fromStdString(json_data["score"]) : "Score: UNAVAILABLE");
 
 		Widget_List* producer_list = new Widget_List("Producers");
@@ -41,6 +42,12 @@ void Movie_Tab::process(const json& data) {
 		Widget_List* award_list = new Widget_List("Awards");
 		Widget_List* staff_list = new Widget_List("Staff Members");
 		Widget_List* cast_list = new Widget_List("Cast Members");
+
+		Button* add_review = new Button("Add Review");
+		add_review->setStyleProp("QPushButton { background: rgb(50,150,50); } QPushButton:hover { background: rgb(70,180,70); }");
+		connect(add_review, &Button::clicked, [this]() {
+			Review_Tab* review = new Review_Tab(app);
+;		});
 		Widget_List* review_list = new Widget_List("Reviews");
 
 		if (json_data["casa_productora_detalle"].is_array()) {
@@ -90,8 +97,18 @@ void Movie_Tab::process(const json& data) {
 		}
 		if (json_data["resenas_detalle"].is_array()) {
 			for (const auto& entry : json_data["resenas_detalle"]) {
+				Linear_Contents* rev_layout = new Linear_Contents(false);
 				Label* json_data_item = new Label(QString::fromStdString(entry["comentario"]));
-				review_list->addWidget(json_data_item);
+				rev_layout->addWidget(json_data_item);
+				if (true) {
+					Button* remove_review = new Button("Delete");
+					remove_review->setStyleProp("QPushButton { background: rgb(150,50,50); } QPushButton:hover { background: rgb(180,70,70); }");
+					connect(remove_review, &Button::clicked, [this]() {
+
+					});
+					rev_layout->addWidget(remove_review);
+				}
+				review_list->addWidget(rev_layout);
 			}
 		}
 
@@ -105,6 +122,7 @@ void Movie_Tab::process(const json& data) {
 		contents->addWidget(award_list);
 		contents->addWidget(staff_list);
 		contents->addWidget(cast_list);
+		contents->addWidget(add_review);
 		contents->addWidget(review_list);
 
 		setCentralWidget(contents);

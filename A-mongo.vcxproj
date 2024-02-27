@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\frontend\lists\staffs.cpp" />
+    <ClCompile Include="src\frontend\review.cpp" />
     <ClCompile Include="src\frontend\views\actor.cpp" />
     <ClCompile Include="src\frontend\views\showing.cpp" />
     <ClCompile Include="src\frontend\lists\actors.cpp" />
@@ -175,6 +176,7 @@
     <QtMoc Include="include\frontend\views\showing.h" />
     <QtMoc Include="include\frontend\lists\staffs.h" />
     <QtMoc Include="include\frontend\views\staff.h" />
+    <QtMoc Include="include\frontend\views\review.h" />
     <ClInclude Include="include\include.h" />
     <QtMoc Include="include\main window.h" />
     <QtMoc Include="include\qt core.h" />

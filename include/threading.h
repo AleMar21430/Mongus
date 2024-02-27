@@ -22,7 +22,8 @@ enum struct Mongo_Type {
 	MOVIE,
 	ACTOR,
 	STAFF,
-	USER
+	USER,
+	REVIEW_ADD
 };
 
 struct Async_Query {

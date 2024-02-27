@@ -31,7 +31,7 @@ void Producer_Tab::process(const json& data) {
 		name->setFontSize(25);
 		Label* country = new Label(json_data.contains("pais") ? "Country: " + QString::fromStdString(json_data["pais"]) : "Country: UNAVAILABLE");
 
-		Widget_List* movie_list = new Widget_List("Producers");
+		Widget_List* movie_list = new Widget_List("Movies Dsitributed");
 
 		if (json_data["peliculas_detalle"].is_array()) {
 			for (const auto& entry : json_data["peliculas_detalle"]) {
