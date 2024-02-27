@@ -33,18 +33,12 @@ Review_Tab::Review_Tab(App* i_app, const string& id) :
 }
 
 void Review_Tab::process(const string& review, const string& score, const string& date, const string& user, const string& id) {
-
 	size_t start_pos = id.find("\"$oid\":\"");
-
-	if (start_pos != std::string::npos) {
+	if (start_pos != string::npos) {
 		start_pos += 8;
 		size_t end_pos = id.find("\"", start_pos);
-
-		if (end_pos != std::string::npos) {
-			std::string extracted_value = id.substr(start_pos, end_pos - start_pos);
-
-			cerr << endl << endl << review << endl << endl << score << endl << "NOW" << endl << "Pekoyo" << endl << endl << extracted_value << endl << endl;
-
+		if (end_pos != string::npos) {
+			string extracted_value = id.substr(start_pos, end_pos - start_pos);
 			app->mongo_request++;
 			app->mongo_thread->cancelWork();
 			Mongo_Query work = Mongo_Query({

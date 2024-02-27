@@ -30,6 +30,12 @@ void Movie_Tab::process(const json& data) {
 		json json_data = data[0];
 
 		Linear_Contents* contents = new Linear_Contents();
+
+		Button* reload = new Button("Reload");
+		connect(reload, &Button::clicked, [this, data]() {
+			QMetaObject::invokeMethod(this, "process", Qt::QueuedConnection, Q_ARG(json, data));
+		});
+
 		Label* title_widget = new Label(json_data.contains("titulo") ? "Title: " + QString::fromStdString(json_data["titulo"]) : "Title: UNAVAILABLE");
 		title_widget->setFontSize(25);
 		Label* premiere = new Label(json_data.contains("anio_lanzamiento") ? "Premiere Date: " + QString::fromStdString(json_data["anio_lanzamiento"]) : "Premiere Date: UNAVAILABLE");
@@ -98,8 +104,9 @@ void Movie_Tab::process(const json& data) {
 				if (true) {
 					Button* remove_review = new Button("Delete");
 					remove_review->setStyleProp("QPushButton { background: rgb(150,50,50); } QPushButton:hover { background: rgb(180,70,70); }");
-					connect(remove_review, &Button::clicked, [this]() {
-
+					connect(remove_review, &Button::clicked, [this, entry]() {
+						Mongo_Query work = Mongo_Query({ {"id", entry["_id"].dump()}}, Mongo_Type::REVIEW_SUB, app->mongo_request);
+						app->mongo_thread->queueWork(work);
 					});
 					rev_layout->addWidget(remove_review);
 				}
@@ -107,6 +114,7 @@ void Movie_Tab::process(const json& data) {
 			}
 		}
 
+		contents->addWidget(reload);
 		contents->addWidget(title_widget);
 		contents->addWidget(premiere);
 		contents->addWidget(duration);

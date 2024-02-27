@@ -27,6 +27,12 @@ void Actor_Tab::process(const json& data) {
 		json json_data = data[0];
 
 		Linear_Contents* contents = new Linear_Contents();
+
+		Button* reload = new Button("Reload");
+		connect(reload, &Button::clicked, [this, data]() {
+			QMetaObject::invokeMethod(this, "process", Qt::QueuedConnection, Q_ARG(json, data));
+		});
+
 		Label* name = new Label(json_data.contains("nombre") ? "Name: " + QString::fromStdString(json_data["nombre"]) : "Name: UNAVAILABLE");
 		name->setFontSize(25);
 		Label* birth = new Label(json_data.contains("fecha_nacimiento") ? "Birthdate: " + QString::fromStdString(json_data["fecha_nacimiento"]) : "Birthdate: UNAVAILABLE");
@@ -44,6 +50,7 @@ void Actor_Tab::process(const json& data) {
 			}
 		}
 
+		contents->addWidget(reload);
 		contents->addWidget(name);
 		contents->addWidget(birth);
 		contents->addWidget(country);

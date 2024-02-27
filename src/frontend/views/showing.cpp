@@ -26,6 +26,12 @@ void Showing_Tab::process(const json& data) {
 		json json_data = data[0];
 		cerr << json_data.dump();
 		Linear_Contents* contents = new Linear_Contents();
+
+		Button* reload = new Button("Reload");
+		connect(reload, &Button::clicked, [this, data]() {
+			QMetaObject::invokeMethod(this, "process", Qt::QueuedConnection, Q_ARG(json, data));
+		});
+
 		Label* name = new Label(json_data.contains("sala") ? "Showroom: " + QString::fromStdString(json_data["sala"]) : "Showroom: UNAVAILABLE");
 		name->setFontSize(25);
 

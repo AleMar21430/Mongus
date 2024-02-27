@@ -376,46 +376,27 @@ void Mongo_Thread::USER(const Mongo_Query& work) {
 
 void Mongo_Thread::REVIEW_ADD(const Mongo_Query& work) {
 	mongo::collection collection = database["resenas"];
+	
+	collection.insert_one(make_document(
+		kvp("comentario", work.query.at("resena")),
+		kvp("calificacion", work.query.at("score")),
+		kvp("tipo", work.query.at("fecha")),
+		kvp("usuario", work.query.at("usuario")),
+		kvp("pelicula", bsoncxx::oid(work.query.at("movie_id")))
+	).view());
 
-	//auto new_review = make_document(
-	//	kvp("comentario", work.query.at("resena")),
-	//	kvp("calificacion", work.query.at("score")),
-	//	kvp("tipo", work.query.at("fecha")),
-	//	kvp("usuario", work.query.at("usuario"))
-	//);
-	//
-	//auto resena_result = collection.insert_one(new_review.view());
-	//bsoncxx::types::bson_value::view idNuevaResena = resena_result->inserted_id();
-	//
-	//mongo::collection peliculas_collection = database["peliculas"];
-	//peliculas_collection.update_one(
-	//	make_document(
-	//		kvp("_id", bsoncxx::oid(work.query.at("movie_id")))
-	//	).view(),
-	//	make_document(
-	//		kvp("$push", make_document(
-	//			kvp("resenas", make_document(
-	//				kvp("$each", make_array(
-	//					make_document(
-	//						kvp("_id", idNuevaResena)
-	//					)
-	//				))
-	//			))
-	//		))
-	//	).view()
-	//);
+	mongo::collection peliculas = database["peliculas"];
+	//peliculas.update_one(make_document(
+	//	
+	//).view());
 
 	json json_data = json();
 	emit result(work, json_data);
 }
 void Mongo_Thread::REVIEW_SUB(const Mongo_Query& work) {
 	mongo::collection collection = database["resenas"];
-	mongocxx::pipeline pipeline;
-	mongocxx::cursor mongo_result = collection.aggregate(pipeline);
 
-	json json_data;
-	for (const bsoncxx::v_noabi::document::view& doc : mongo_result) {
-		json_data.push_back(json::parse(bsoncxx::to_json(doc)));
-	}
-	emit result(work, json_data);
+	collection.delete_one(make_document(
+		kvp("_id", bsoncxx::oid(work.query.at("id")))
+	).view());
 }
