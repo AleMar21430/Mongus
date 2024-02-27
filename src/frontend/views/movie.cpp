@@ -33,6 +33,7 @@ void Movie_Tab::process(const json& data) {
 
 		Label* duration = new Label(json_data.contains("duratcon") ? "Duration: " + QString::fromStdString(json_data["duracion"]) : "Duration: Unknown");
 		Button* director = new Button(json_data.contains("director") ? "Director: " + QString::fromStdString(json_data["director"]) : "Director: Unknown");
+		director->setStyleProp("text-align: center;");
 		Label* rating = new Label(json_data.contains("score") ? "Score: " + QString::fromStdString(json_data["score"]) : "Score: Unknown");
 
 		Widget_List* producer_list = new Widget_List("Producers");

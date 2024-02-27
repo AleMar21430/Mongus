@@ -35,7 +35,9 @@ Convert the follwoing mongo aggregation pipeline to c++ mongocxx code utilizing 
 ```
 ```cpp
 mongocxx::pipeline pipeline;
+pipeline.match(make_document(kvp("titulo", "Título de la Película")));
 
+// $lookup for actores
 pipeline.lookup(make_document(
 	kvp("from", "actores"),
 	kvp("localField", "actores"),
@@ -43,6 +45,7 @@ pipeline.lookup(make_document(
 	kvp("as", "actores_detalle")
 ));
 
+// $lookup for staff_produccion
 pipeline.lookup(make_document(
 	kvp("from", "staff_produccion"),
 	kvp("localField", "staff_produccion"),
@@ -50,14 +53,62 @@ pipeline.lookup(make_document(
 	kvp("as", "staff_produccion_detalle")
 ));
 
+// $lookup for generos_cinematograficos
+pipeline.lookup(make_document(
+	kvp("from", "generos_cinematograficos"),
+	kvp("localField", "genero"),
+	kvp("foreignField", "_id"),
+	kvp("as", "genero_detalle")
+));
+
+// $lookup for taquilla
+pipeline.lookup(make_document(
+	kvp("from", "taquilla"),
+	kvp("localField", "taquilla"),
+	kvp("foreignField", "_id"),
+	kvp("as", "taquilla_detalle")
+));
+
+// $lookup for resenas
+pipeline.lookup(make_document(
+	kvp("from", "resenas"),
+	kvp("localField", "resenas"),
+	kvp("foreignField", "_id"),
+	kvp("as", "resenas_detalle")
+));
+
+// $lookup for premios
+pipeline.lookup(make_document(
+	kvp("from", "premios"),
+	kvp("localField", "premios"),
+	kvp("foreignField", "_id"),
+	kvp("as", "premios_detalle")
+));
+
+// $lookup for casas_productoras
+pipeline.lookup(make_document(
+	kvp("from", "casas_productoras"),
+	kvp("localField", "casa_productora"),
+	kvp("foreignField", "_id"),
+	kvp("as", "casa_productora_detalle")
+));
+
+// $project
 pipeline.project(make_document(
+	kvp("_id", 1),
 	kvp("titulo", 1),
+	kvp("genero_detalle", 1),
+	kvp("director", 1),
 	kvp("anio_lanzamiento", 1),
-	kvp("actores_detalle.nombre", 1),
-	kvp("actores_detalle.fecha_nacimiento", 1),
-	kvp("actores_detalle.nacionalidad", 1),
-	kvp("staff_produccion_detalle.nombre", 1),
-	kvp("staff_produccion_detalle.cargo", 1)
+	kvp("sinopsis", 1),
+	kvp("clasificacion_edad", 1),
+	kvp("actores_detalle", 1),
+	kvp("taquilla_detalle", 1),
+	kvp("resenas_detalle", 1),
+	kvp("premios_detalle", 1),
+	kvp("staff_produccion_detalle", 1),
+	kvp("casa_productora_detalle", 1),
+	kvp("en_cartelera", 1)
 ));
 ```
 

@@ -6,14 +6,16 @@
 
 #include "frontend/lists/producers.h"
 #include "frontend/lists/showings.h"
-#include "frontend/lists/actors.h"
 #include "frontend/lists/movies.h"
+#include "frontend/lists/actors.h"
+#include "frontend/lists/staffs.h"
 #include "frontend/lists/users.h"
 
 #include "frontend/views/producer.h"
 #include "frontend/views/showing.h"
-#include "frontend/views/actor.h"
 #include "frontend/views/movie.h"
+#include "frontend/views/actor.h"
+#include "frontend/views/staff.h"
 #include "frontend/views/user.h"
 
 #include "frontend/settings.h"

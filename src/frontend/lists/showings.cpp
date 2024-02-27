@@ -11,12 +11,12 @@ Showings_Tab::Showings_Tab(App* i_app) :
 	layout->addWidget(list);
 	connect(list, &List::itemDoubleClicked, [this](QListWidgetItem* item) {
 		Movie_Tab* movie = new Movie_Tab(app, item->text().toStdString());
-		});
+	});
 
 	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {
 		if (query.type == Mongo_Type::SHOWINGS && query.request_id == app->mongo_request)
 			process(data);
-		});
+	});
 }
 
 void Showings_Tab::activate() {
@@ -35,7 +35,14 @@ void Showings_Tab::process(const json& data) {
 		item->setSizeHint(QSize(256, 300));
 		item->setTextAlignment(Qt::AlignmentFlag::AlignHCenter | Qt::AlignmentFlag::AlignBottom);
 
-		item->setText(QString::fromStdString(entry["titulo"]));
+		chrono::milliseconds timestamp(entry["fecha_proyeccion"]["$date"]);
+		chrono::system_clock::time_point timePoint(timestamp);
+		time_t time = chrono::system_clock::to_time_t(timePoint);
+		tm* timeStruct = localtime(&time);
+		char buffer[80];
+		strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeStruct);
+
+		item->setText(QString::fromStdString(entry["sala"])  + " | " + QString::fromStdString(buffer));
 
 		item->setIcon(loading);
 		list->addItem(item);

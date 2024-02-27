@@ -139,6 +139,10 @@ void Button::setFontSize(const int& size) {
 	setStyleSheet(styleSheet() + "font-size: " + QString::fromStdString(to_string(size) + "px"));
 }
 
+void Button::setStyleProp(const QString& style){
+	setStyleSheet(styleSheet() + style);
+}
+
 Text_Edit::Text_Edit() {
 	setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
 }

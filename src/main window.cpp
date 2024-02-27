@@ -64,13 +64,23 @@ int App::cleanup() {
 Main_Window::Main_Window(App* app) :
 	app(app)
 {
-	Movies_Tab* movie_listings_tab = new Movies_Tab(app);
-	Settings_Tab* settings_tab = new Settings_Tab(app);
+	Producers_Tab* producers_tab = new Producers_Tab(app);
 	Showings_Tab* showings_tab = new Showings_Tab(app);
+	Movies_Tab* movies_tab = new Movies_Tab(app);
+	Actors_Tab* actors_tab = new Actors_Tab(app);
+	Staffs_Tab* staffs_tab = new Staffs_Tab(app);
+	Users_Tab* users_tab = new Users_Tab(app);
+
+	Settings_Tab* settings_tab = new Settings_Tab(app);
 
 	tabs = new Tabs();
-	tabs->addTab(movie_listings_tab, "Movie Listings");
-	tabs->addTab(showings_tab, "Movie Showings");
+	tabs->addTab(producers_tab, "Producers");
+	tabs->addTab(showings_tab, "Showings");
+	tabs->addTab(movies_tab, "Movies");
+	tabs->addTab(actors_tab, "Actors");
+	tabs->addTab(staffs_tab, "Staff");
+	tabs->addTab(users_tab, "Users");
+
 	tabs->addTab(settings_tab, "Settings");
 
 	Splitter* splitter = new Splitter(true);
@@ -83,13 +93,16 @@ Main_Window::Main_Window(App* app) :
 
 	setCentralWidget(splitter);
 	showMaximized();
-	movie_listings_tab->activate();
+	producers_tab->activate();
 }
 
 void Main_Window::changeView(const int& row) {
-	if (row == 0) {
-		dynamic_cast<Movies_Tab*>(tabs->currentWidget())->activate();
-	}
+	if (row == 0) dynamic_cast<Producers_Tab*>(tabs->currentWidget())->activate();
+	if (row == 1) dynamic_cast<Showings_Tab*>(tabs->currentWidget())->activate();
+	if (row == 2) dynamic_cast<Movies_Tab*>(tabs->currentWidget())->activate();
+	if (row == 3) dynamic_cast<Actors_Tab*>(tabs->currentWidget())->activate();
+	if (row == 4) dynamic_cast<Staffs_Tab*>(tabs->currentWidget())->activate();
+	if (row == 5) dynamic_cast<Users_Tab*>(tabs->currentWidget())->activate();
 }
 
 void Main_Window::logMessage(const QString& message) {

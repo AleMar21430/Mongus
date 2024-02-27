@@ -11,12 +11,12 @@ Users_Tab::Users_Tab(App* i_app) :
 	layout->addWidget(list);
 	connect(list, &List::itemDoubleClicked, [this](QListWidgetItem* item) {
 		Movie_Tab* movie = new Movie_Tab(app, item->text().toStdString());
-		});
+	});
 
 	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {
 		if (query.type == Mongo_Type::USERS && query.request_id == app->mongo_request)
 			process(data);
-		});
+	});
 }
 
 void Users_Tab::activate() {
@@ -35,7 +35,7 @@ void Users_Tab::process(const json& data) {
 		item->setSizeHint(QSize(256, 300));
 		item->setTextAlignment(Qt::AlignmentFlag::AlignHCenter | Qt::AlignmentFlag::AlignBottom);
 
-		item->setText(QString::fromStdString(entry["titulo"]));
+		item->setText(QString::fromStdString(entry["nombre_usuario"]));
 
 		item->setIcon(loading);
 		list->addItem(item);

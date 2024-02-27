@@ -18,6 +18,7 @@ public:
 	Button(const QString& i_label);
 
 	void setFontSize(const int& size);
+	void setStyleProp(const QString& style);
 };
 
 class Form : public QWidget {

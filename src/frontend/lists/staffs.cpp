@@ -1,9 +1,9 @@
-#include "frontend/lists/producers.h"
+#include "frontend/lists/staffs.h"
 
 #include "main window.h"
-#include "frontend/views/producer.h"
+#include "frontend/views/staff.h"
 
-Producers_Tab::Producers_Tab(App* i_app) :
+Staffs_Tab::Staffs_Tab(App* i_app) :
 	Linear_Contents(),
 	app(i_app)
 {
@@ -14,21 +14,21 @@ Producers_Tab::Producers_Tab(App* i_app) :
 	});
 
 	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {
-		if (query.type == Mongo_Type::PRODUCERS && query.request_id == app->mongo_request)
+		if (query.type == Mongo_Type::STAFFS && query.request_id == app->mongo_request)
 			process(data);
 	});
 }
 
-void Producers_Tab::activate() {
+void Staffs_Tab::activate() {
 	app->mongo_request++;
 	app->mongo_thread->cancelWork();
 	list->clear();
-	Mongo_Query work = Mongo_Query({}, Mongo_Type::PRODUCERS, app->mongo_request);
+	Mongo_Query work = Mongo_Query({}, Mongo_Type::STAFFS, app->mongo_request);
 	app->mongo_thread->queueWork(work);
 }
 
 
-void Producers_Tab::process(const json& data) {
+void Staffs_Tab::process(const json& data) {
 	const QIcon loading = QIcon("./res/loading.png");
 	for (const auto& entry : data) {
 		QListWidgetItem* item = new QListWidgetItem();

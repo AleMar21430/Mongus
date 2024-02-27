@@ -15,11 +15,13 @@ enum struct Mongo_Type {
 	SHOWINGS,
 	MOVIES,
 	ACTORS,
+	STAFFS,
 	USERS,
 	PRODUCER,
 	SHOWING,
 	MOVIE,
 	ACTOR,
+	STAFF,
 	USER
 };
 
@@ -111,12 +113,14 @@ public:
 	void SHOWINGS(const Mongo_Query& work);
 	void MOVIES(const Mongo_Query& work);
 	void ACTORS(const Mongo_Query& work);
+	void STAFFS(const Mongo_Query& work);
 	void USERS(const Mongo_Query& work);
 
 	void PRODUCER(const Mongo_Query& work);
 	void SHOWING(const Mongo_Query& work);
 	void MOVIE(const Mongo_Query& work);
 	void ACTOR(const Mongo_Query& work);
+	void STAFF(const Mongo_Query& work);
 	void USER(const Mongo_Query& work);
 
 signals:

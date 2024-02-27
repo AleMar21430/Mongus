@@ -11,12 +11,12 @@ Actors_Tab::Actors_Tab(App* i_app) :
 	layout->addWidget(list);
 	connect(list, &List::itemDoubleClicked, [this](QListWidgetItem* item) {
 		Movie_Tab* movie = new Movie_Tab(app, item->text().toStdString());
-		});
+	});
 
 	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {
 		if (query.type == Mongo_Type::ACTORS && query.request_id == app->mongo_request)
 			process(data);
-		});
+	});
 }
 
 void Actors_Tab::activate() {
@@ -35,7 +35,7 @@ void Actors_Tab::process(const json& data) {
 		item->setSizeHint(QSize(256, 300));
 		item->setTextAlignment(Qt::AlignmentFlag::AlignHCenter | Qt::AlignmentFlag::AlignBottom);
 
-		item->setText(QString::fromStdString(entry["titulo"]));
+		item->setText(QString::fromStdString(entry["nombre"]));
 
 		item->setIcon(loading);
 		list->addItem(item);
