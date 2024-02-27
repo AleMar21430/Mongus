@@ -312,6 +312,24 @@ void Mongo_Thread::MOVIE(const Mongo_Query& work) {
 void Mongo_Thread::ACTOR(const Mongo_Query& work) {
 	mongo::collection collection = database["actores"];
 	mongocxx::pipeline pipeline;
+
+	pipeline.match(make_document(kvp("nombre", work.query.at("nombre"))));
+
+	pipeline.lookup(make_document(
+		kvp("from", "peliculas"),
+		kvp("localField", "peliculas_participadas"),
+		kvp("foreignField", "_id"),
+		kvp("as", "peliculas_detalle")
+	));
+
+	pipeline.project(make_document(
+		kvp("nombre", 1),
+		kvp("fecha_nacimiento", 1),
+		kvp("nacionalidad", 1),
+		kvp("peliculas_detalle", 1),
+		kvp("_id", 0)
+	));
+
 	mongocxx::cursor mongo_result = collection.aggregate(pipeline);
 
 	json json_data;
@@ -323,6 +341,9 @@ void Mongo_Thread::ACTOR(const Mongo_Query& work) {
 void Mongo_Thread::STAFF(const Mongo_Query & work) {
 	mongo::collection collection = database["staff_produccion"];
 	mongocxx::pipeline pipeline;
+
+	pipeline.match(make_document(kvp("nombre", work.query.at("nombre"))));
+
 	mongocxx::cursor mongo_result = collection.aggregate(pipeline);
 
 	json json_data;
@@ -334,6 +355,16 @@ void Mongo_Thread::STAFF(const Mongo_Query & work) {
 void Mongo_Thread::USER(const Mongo_Query& work) {
 	mongo::collection collection = database["usuarios"];
 	mongocxx::pipeline pipeline;
+
+	pipeline.match(make_document(kvp("nombre_usuario", work.query.at("nombre"))));
+
+	pipeline.project(make_document(
+		kvp("nombre_usuario", 1),
+		kvp("correo", 1),
+		kvp("tipo", 1),
+		kvp("_id", 0)
+	));
+
 	mongocxx::cursor mongo_result = collection.aggregate(pipeline);
 
 	json json_data;
@@ -345,13 +376,36 @@ void Mongo_Thread::USER(const Mongo_Query& work) {
 
 void Mongo_Thread::REVIEW_ADD(const Mongo_Query& work) {
 	mongo::collection collection = database["resenas"];
-	mongocxx::pipeline pipeline;
-	mongocxx::cursor mongo_result = collection.aggregate(pipeline);
 
-	json json_data;
-	for (const bsoncxx::v_noabi::document::view& doc : mongo_result) {
-		json_data.push_back(json::parse(bsoncxx::to_json(doc)));
-	}
+	//auto new_review = make_document(
+	//	kvp("comentario", work.query.at("resena")),
+	//	kvp("calificacion", work.query.at("score")),
+	//	kvp("tipo", work.query.at("fecha")),
+	//	kvp("usuario", work.query.at("usuario"))
+	//);
+	//
+	//auto resena_result = collection.insert_one(new_review.view());
+	//bsoncxx::types::bson_value::view idNuevaResena = resena_result->inserted_id();
+	//
+	//mongo::collection peliculas_collection = database["peliculas"];
+	//peliculas_collection.update_one(
+	//	make_document(
+	//		kvp("_id", bsoncxx::oid(work.query.at("movie_id")))
+	//	).view(),
+	//	make_document(
+	//		kvp("$push", make_document(
+	//			kvp("resenas", make_document(
+	//				kvp("$each", make_array(
+	//					make_document(
+	//						kvp("_id", idNuevaResena)
+	//					)
+	//				))
+	//			))
+	//		))
+	//	).view()
+	//);
+
+	json json_data = json();
 	emit result(work, json_data);
 }
 void Mongo_Thread::REVIEW_SUB(const Mongo_Query& work) {

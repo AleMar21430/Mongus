@@ -4,6 +4,7 @@
 
 #include "frontend/views/producer.h"
 #include "frontend/views/actor.h"
+#include "frontend/views/staff.h"
 
 #include "frontend/views/review.h"
 
@@ -33,7 +34,7 @@ void Movie_Tab::process(const json& data) {
 		title_widget->setFontSize(25);
 		Label* premiere = new Label(json_data.contains("anio_lanzamiento") ? "Premiere Date: " + QString::fromStdString(json_data["anio_lanzamiento"]) : "Premiere Date: UNAVAILABLE");
 
-		Label* duration = new Label(json_data.contains("duratcon") ? "Duration: " + QString::fromStdString(json_data["duracion"]) : "Duration: UNAVAILABLE");
+		Label* duration = new Label(json_data.contains("duracion") ? "Duration: " + QString::fromStdString(json_data["duracion"]) : "Duration: UNAVAILABLE");
 		Label* director = new Label(json_data.contains("director") ? "Director: " + QString::fromStdString(json_data["director"]) : "Director: UNAVAILABLE");
 		Label* rating = new Label(json_data.contains("score") ? "Score: " + QString::fromStdString(json_data["score"]) : "Score: UNAVAILABLE");
 
@@ -45,8 +46,8 @@ void Movie_Tab::process(const json& data) {
 
 		Button* add_review = new Button("Add Review");
 		add_review->setStyleProp("QPushButton { background: rgb(50,150,50); } QPushButton:hover { background: rgb(70,180,70); }");
-		connect(add_review, &Button::clicked, [this]() {
-			Review_Tab* review = new Review_Tab(app);
+		connect(add_review, &Button::clicked, [this, json_data]() {
+			Review_Tab* review = new Review_Tab(app, json_data["_id"].dump());
 		});
 		Widget_List* review_list = new Widget_List("Reviews");
 
@@ -62,36 +63,30 @@ void Movie_Tab::process(const json& data) {
 		if (json_data["genero_detalle"].is_array()) {
 			for (const auto& entry : json_data["genero_detalle"]) {
 				Label* json_data_item = new Label(QString::fromStdString(entry["nombre_genero"]));
-				//connect(json_data_item, &Button::clicked, [this]() {
-				//
-				//});
 				genre_list->addWidget(json_data_item);
 			}
 		}
 		if (json_data["premios_detalle"].is_array()) {
 			for (const auto& entry : json_data["premios_detalle"]) {
 				Label* json_data_item = new Label(QString::fromStdString(entry["nombre_premio"]));
-				//connect(json_data_item, &Button::clicked, [this]() {
-				//
-				//});
 				award_list->addWidget(json_data_item);
 			}
 		}
 		if (json_data["staff_produccion_detalle"].is_array()) {
 			for (const auto& entry : json_data["staff_produccion_detalle"]) {
-				Label* json_data_item = new Label(QString::fromStdString(entry["nombre"]));
-				//connect(json_data_item, &Button::clicked, [this]() {
-				//
-				//});
+				Button* json_data_item = new Button(QString::fromStdString(entry["nombre"]));
+				connect(json_data_item, &Button::clicked, [this, entry]() {
+					Staff_Tab* staff = new Staff_Tab(app, entry["nombre"]);
+				});
 				staff_list->addWidget(json_data_item);
 			}
 		}
 		if (json_data["actores_detalle"].is_array()) {
 			for (const auto& entry : json_data["actores_detalle"]) {
-				Label* json_data_item = new Label(QString::fromStdString(entry["nombre"]));
-				//connect(json_data_item, &Button::clicked, [this]() {
-				//
-				//});
+				Button* json_data_item = new Button(QString::fromStdString(entry["nombre"]));
+				connect(json_data_item, &Button::clicked, [this, entry]() {
+					Actor_Tab* actor = new Actor_Tab(app, entry["nombre"]);
+				});
 				cast_list->addWidget(json_data_item);
 			}
 		}

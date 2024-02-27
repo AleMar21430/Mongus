@@ -11,8 +11,8 @@ class Review_Tab : public QMainWindow {
 public:
 	App* app;
 
-	Review_Tab(App* i_app);
+	Review_Tab(App* i_app, const string& id);
 
 public slots:
-	void process();
+	void process(const string& review, const string& score, const string& date, const string& user, const string& id);
 };

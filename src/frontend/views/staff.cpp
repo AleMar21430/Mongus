@@ -10,13 +10,13 @@ Staff_Tab::Staff_Tab(App* i_app, const string& nombre) :
 	app(i_app)
 {
 	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {
-		if (query.type == Mongo_Type::ACTOR && query.request_id == app->mongo_request)
+		if (query.type == Mongo_Type::STAFF && query.request_id == app->mongo_request)
 			QMetaObject::invokeMethod(this, "process", Qt::QueuedConnection, Q_ARG(json, data));
 		});
 
 	app->mongo_request++;
 	app->mongo_thread->cancelWork();
-	Mongo_Query work = Mongo_Query({ {"nombre", nombre} }, Mongo_Type::ACTOR, app->mongo_request);
+	Mongo_Query work = Mongo_Query({ {"nombre", nombre} }, Mongo_Type::STAFF, app->mongo_request);
 	app->mongo_thread->queueWork(work);
 
 	showMaximized();

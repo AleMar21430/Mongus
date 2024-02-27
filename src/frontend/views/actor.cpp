@@ -29,21 +29,23 @@ void Actor_Tab::process(const json& data) {
 		Linear_Contents* contents = new Linear_Contents();
 		Label* name = new Label(json_data.contains("nombre") ? "Name: " + QString::fromStdString(json_data["nombre"]) : "Name: UNAVAILABLE");
 		name->setFontSize(25);
-		Label* country = new Label(json_data.contains("pais") ? "Country: " + QString::fromStdString(json_data["pais"]) : "Country: UNAVAILABLE");
+		Label* birth = new Label(json_data.contains("fecha_nacimiento") ? "Birthdate: " + QString::fromStdString(json_data["fecha_nacimiento"]) : "Birthdate: UNAVAILABLE");
+		Label* country = new Label(json_data.contains("nacionalidad") ? "Country: " + QString::fromStdString(json_data["nacionalidad"]) : "Country: UNAVAILABLE");
 
 		Widget_List* movie_list = new Widget_List("Movie Appearances");
 
 		if (json_data["peliculas_detalle"].is_array()) {
 			for (const auto& entry : json_data["peliculas_detalle"]) {
 				Button* json_data_item = new Button(QString::fromStdString(entry["titulo"]));
-				connect(json_data_item, &Button::clicked, [this]() {
-
-					});
+				connect(json_data_item, &Button::clicked, [this, entry]() {
+					Movie_Tab* movie = new Movie_Tab(app, entry["titulo"]);
+				});
 				movie_list->addWidget(json_data_item);
 			}
 		}
 
 		contents->addWidget(name);
+		contents->addWidget(birth);
 		contents->addWidget(country);
 		contents->addWidget(movie_list);
 

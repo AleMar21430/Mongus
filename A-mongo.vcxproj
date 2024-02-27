@@ -138,7 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\frontend\lists\staffs.cpp" />
-    <ClCompile Include="src\frontend\review.cpp" />
+    <ClCompile Include="src\frontend\views\review.cpp" />
     <ClCompile Include="src\frontend\views\actor.cpp" />
     <ClCompile Include="src\frontend\views\showing.cpp" />
     <ClCompile Include="src\frontend\lists\actors.cpp" />
