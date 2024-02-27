@@ -23,7 +23,8 @@ enum struct Mongo_Type {
 	ACTOR,
 	STAFF,
 	USER,
-	REVIEW_ADD
+	REVIEW_ADD,
+	REVIEW_SUB
 };
 
 struct Async_Query {
@@ -123,6 +124,9 @@ public:
 	void ACTOR(const Mongo_Query& work);
 	void STAFF(const Mongo_Query& work);
 	void USER(const Mongo_Query& work);
+
+	void REVIEW_ADD(const Mongo_Query& work);
+	void REVIEW_SUB(const Mongo_Query& work);
 
 signals:
 	void result(const Mongo_Query& query, const json& data);

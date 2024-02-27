@@ -80,6 +80,12 @@ void Mongo_Thread::processWork(const Mongo_Query& work) {
 	case Mongo_Type::USER:
 		USER(work);
 		break;
+	case Mongo_Type::REVIEW_ADD:
+		REVIEW_ADD(work);
+		break;
+	case Mongo_Type::REVIEW_SUB:
+		REVIEW_SUB(work);
+		break;
 	}
 }
 
@@ -195,8 +201,26 @@ void Mongo_Thread::PRODUCER(const Mongo_Query& work) {
 	emit result(work, json_data);
 }
 void Mongo_Thread::SHOWING(const Mongo_Query& work) {
-	mongo::collection collection = database["peliculas"];
+	mongo::collection collection = database["proyecciones"];
 	mongocxx::pipeline pipeline;
+
+	pipeline.match(make_document(kvp("sala", work.query.at("sala"))));
+
+	pipeline.lookup(make_document(
+		kvp("from", "peliculas"),
+		kvp("localField", "_id"),
+		kvp("foreignField", "proyecciones"),
+		kvp("as", "pelicula_detalle")
+	));
+	pipeline.project(make_document(
+		kvp("sala", 1),
+		kvp("asientos_vendidos", 1),
+		kvp("dolares_recaudados", 1),
+		kvp("fecha_proyeccion", 1),
+		kvp("pelicula_detalle.titulo", 1),
+		kvp("_id", 0)
+	));
+
 	mongocxx::cursor mongo_result = collection.aggregate(pipeline);
 
 	json json_data;
@@ -286,7 +310,7 @@ void Mongo_Thread::MOVIE(const Mongo_Query& work) {
 	emit result(work, json_data);
 }
 void Mongo_Thread::ACTOR(const Mongo_Query& work) {
-	mongo::collection collection = database["peliculas"];
+	mongo::collection collection = database["actores"];
 	mongocxx::pipeline pipeline;
 	mongocxx::cursor mongo_result = collection.aggregate(pipeline);
 
@@ -297,7 +321,7 @@ void Mongo_Thread::ACTOR(const Mongo_Query& work) {
 	emit result(work, json_data);
 }
 void Mongo_Thread::STAFF(const Mongo_Query & work) {
-	mongo::collection collection = database["peliculas"];
+	mongo::collection collection = database["staff_produccion"];
 	mongocxx::pipeline pipeline;
 	mongocxx::cursor mongo_result = collection.aggregate(pipeline);
 
@@ -308,7 +332,30 @@ void Mongo_Thread::STAFF(const Mongo_Query & work) {
 	emit result(work, json_data);
 }
 void Mongo_Thread::USER(const Mongo_Query& work) {
-	mongo::collection collection = database["peliculas"];
+	mongo::collection collection = database["usuarios"];
+	mongocxx::pipeline pipeline;
+	mongocxx::cursor mongo_result = collection.aggregate(pipeline);
+
+	json json_data;
+	for (const bsoncxx::v_noabi::document::view& doc : mongo_result) {
+		json_data.push_back(json::parse(bsoncxx::to_json(doc)));
+	}
+	emit result(work, json_data);
+}
+
+void Mongo_Thread::REVIEW_ADD(const Mongo_Query& work) {
+	mongo::collection collection = database["resenas"];
+	mongocxx::pipeline pipeline;
+	mongocxx::cursor mongo_result = collection.aggregate(pipeline);
+
+	json json_data;
+	for (const bsoncxx::v_noabi::document::view& doc : mongo_result) {
+		json_data.push_back(json::parse(bsoncxx::to_json(doc)));
+	}
+	emit result(work, json_data);
+}
+void Mongo_Thread::REVIEW_SUB(const Mongo_Query& work) {
+	mongo::collection collection = database["resenas"];
 	mongocxx::pipeline pipeline;
 	mongocxx::cursor mongo_result = collection.aggregate(pipeline);
 

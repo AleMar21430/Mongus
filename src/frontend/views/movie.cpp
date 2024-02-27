@@ -47,7 +47,7 @@ void Movie_Tab::process(const json& data) {
 		add_review->setStyleProp("QPushButton { background: rgb(50,150,50); } QPushButton:hover { background: rgb(70,180,70); }");
 		connect(add_review, &Button::clicked, [this]() {
 			Review_Tab* review = new Review_Tab(app);
-;		});
+		});
 		Widget_List* review_list = new Widget_List("Reviews");
 
 		if (json_data["casa_productora_detalle"].is_array()) {
