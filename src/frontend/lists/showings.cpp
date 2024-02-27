@@ -10,7 +10,7 @@ Showings_Tab::Showings_Tab(App* i_app) :
 	list = new List(true);
 	layout->addWidget(list);
 	connect(list, &List::itemDoubleClicked, [this](QListWidgetItem* item) {
-		Movie_Tab* movie = new Movie_Tab(app, item->text().toStdString());
+		Showing_Tab* movie = new Showing_Tab(app, item->data(500).toString().toStdString());
 	});
 
 	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {
@@ -43,6 +43,7 @@ void Showings_Tab::process(const json& data) {
 		strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeStruct);
 
 		item->setText(QString::fromStdString(entry["sala"])  + " | " + QString::fromStdString(buffer));
+		item->setData(500, QString::fromStdString(entry["sala"]));
 
 		item->setIcon(loading);
 		list->addItem(item);

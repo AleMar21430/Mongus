@@ -10,7 +10,7 @@ Actors_Tab::Actors_Tab(App* i_app) :
 	list = new List(true);
 	layout->addWidget(list);
 	connect(list, &List::itemDoubleClicked, [this](QListWidgetItem* item) {
-		Movie_Tab* movie = new Movie_Tab(app, item->text().toStdString());
+		Actor_Tab* movie = new Actor_Tab(app, item->text().toStdString());
 	});
 
 	connect(app->mongo_thread, &Mongo_Thread::result, [this](const Mongo_Query& query, const json& data) {

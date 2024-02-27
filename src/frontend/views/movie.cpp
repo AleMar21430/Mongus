@@ -27,14 +27,14 @@ void Movie_Tab::process(const json& data) {
 		json json_data = data[0];
 
 		Linear_Contents* contents = new Linear_Contents();
-		Label* title_widget = new Label(json_data.contains("titulo") ? "Title: " + QString::fromStdString(json_data["titulo"]) : "Title: Unknown");
+		Label* title_widget = new Label(json_data.contains("titulo") ? "Title: " + QString::fromStdString(json_data["titulo"]) : "Title: UNAVAILABLE");
 		title_widget->setFontSize(25);
-		Label* premiere = new Label(json_data.contains("anio_lanzamiento") ? "Premiere Date: " + QString::fromStdString(json_data["anio_lanzamiento"]) : "Premiere Date: Unknown");
+		Label* premiere = new Label(json_data.contains("anio_lanzamiento") ? "Premiere Date: " + QString::fromStdString(json_data["anio_lanzamiento"]) : "Premiere Date: UNAVAILABLE");
 
-		Label* duration = new Label(json_data.contains("duratcon") ? "Duration: " + QString::fromStdString(json_data["duracion"]) : "Duration: Unknown");
-		Button* director = new Button(json_data.contains("director") ? "Director: " + QString::fromStdString(json_data["director"]) : "Director: Unknown");
+		Label* duration = new Label(json_data.contains("duratcon") ? "Duration: " + QString::fromStdString(json_data["duracion"]) : "Duration: UNAVAILABLE");
+		Button* director = new Button(json_data.contains("director") ? "Director: " + QString::fromStdString(json_data["director"]) : "Director: UNAVAILABLE");
 		director->setStyleProp("text-align: center;");
-		Label* rating = new Label(json_data.contains("score") ? "Score: " + QString::fromStdString(json_data["score"]) : "Score: Unknown");
+		Label* rating = new Label(json_data.contains("score") ? "Score: " + QString::fromStdString(json_data["score"]) : "Score: UNAVAILABLE");
 
 		Widget_List* producer_list = new Widget_List("Producers");
 		Widget_List* genre_list = new Widget_List("Genres");
@@ -54,37 +54,37 @@ void Movie_Tab::process(const json& data) {
 		}
 		if (json_data["genero_detalle"].is_array()) {
 			for (const auto& entry : json_data["genero_detalle"]) {
-				Button* json_data_item = new Button(QString::fromStdString(entry["nombre_genero"]));
-				connect(json_data_item, &Button::clicked, [this]() {
-
-					});
+				Label* json_data_item = new Label(QString::fromStdString(entry["nombre_genero"]));
+				//connect(json_data_item, &Button::clicked, [this]() {
+				//
+				//});
 				genre_list->addWidget(json_data_item);
 			}
 		}
 		if (json_data["premios_detalle"].is_array()) {
 			for (const auto& entry : json_data["premios_detalle"]) {
-				Button* json_data_item = new Button(QString::fromStdString(entry["nombre_premio"]));
-				connect(json_data_item, &Button::clicked, [this]() {
-
-					});
+				Label* json_data_item = new Label(QString::fromStdString(entry["nombre_premio"]));
+				//connect(json_data_item, &Button::clicked, [this]() {
+				//
+				//});
 				award_list->addWidget(json_data_item);
 			}
 		}
 		if (json_data["staff_produccion_detalle"].is_array()) {
 			for (const auto& entry : json_data["staff_produccion_detalle"]) {
-				Button* json_data_item = new Button(QString::fromStdString(entry["nombre"]));
-				connect(json_data_item, &Button::clicked, [this]() {
-
-					});
+				Label* json_data_item = new Label(QString::fromStdString(entry["nombre"]));
+				//connect(json_data_item, &Button::clicked, [this]() {
+				//
+				//});
 				staff_list->addWidget(json_data_item);
 			}
 		}
 		if (json_data["actores_detalle"].is_array()) {
 			for (const auto& entry : json_data["actores_detalle"]) {
-				Button* json_data_item = new Button(QString::fromStdString(entry["nombre"]));
-				connect(json_data_item, &Button::clicked, [this]() {
-
-					});
+				Label* json_data_item = new Label(QString::fromStdString(entry["nombre"]));
+				//connect(json_data_item, &Button::clicked, [this]() {
+				//
+				//});
 				cast_list->addWidget(json_data_item);
 			}
 		}
@@ -108,6 +108,6 @@ void Movie_Tab::process(const json& data) {
 		contents->addWidget(review_list);
 
 		setCentralWidget(contents);
-		setWindowTitle(json_data.contains("titulo") ? QString::fromStdString(json_data["titulo"]) : "Unknown");
+		setWindowTitle(json_data.contains("titulo") ? QString::fromStdString(json_data["titulo"]) : "UNAVAILABLE");
 	}
 }

@@ -27,9 +27,9 @@ void Actor_Tab::process(const json& data) {
 		json json_data = data[0];
 
 		Linear_Contents* contents = new Linear_Contents();
-		Label* name = new Label(json_data.contains("nombre") ? "Name: " + QString::fromStdString(json_data["nombre"]) : "Name: Unknown");
+		Label* name = new Label(json_data.contains("nombre") ? "Name: " + QString::fromStdString(json_data["nombre"]) : "Name: UNAVAILABLE");
 		name->setFontSize(25);
-		Label* country = new Label(json_data.contains("pais") ? "Country: " + QString::fromStdString(json_data["pais"]) : "Country: Unknown");
+		Label* country = new Label(json_data.contains("pais") ? "Country: " + QString::fromStdString(json_data["pais"]) : "Country: UNAVAILABLE");
 
 		Widget_List* movie_list = new Widget_List("Producers");
 
@@ -48,6 +48,6 @@ void Actor_Tab::process(const json& data) {
 		contents->addWidget(movie_list);
 
 		setCentralWidget(contents);
-		setWindowTitle(json_data.contains("nombre") ? QString::fromStdString(json_data["nombre"]) : "Unknown");
+		setWindowTitle(json_data.contains("nombre") ? QString::fromStdString(json_data["nombre"]) : "UNAVAILABLE");
 	}
 }

@@ -27,27 +27,30 @@ void Showing_Tab::process(const json& data) {
 		json json_data = data[0];
 
 		Linear_Contents* contents = new Linear_Contents();
-		Label* name = new Label(json_data.contains("nombre") ? "Name: " + QString::fromStdString(json_data["nombre"]) : "Name: Unknown");
+		Label* name = new Label(json_data.contains("sala") ? "Showroom: " + QString::fromStdString(json_data["sala"]) : "Showroom: UNAVAILABLE");
 		name->setFontSize(25);
-		Label* country = new Label(json_data.contains("pais") ? "Country: " + QString::fromStdString(json_data["pais"]) : "Country: Unknown");
 
-		Widget_List* movie_list = new Widget_List("Producers");
-
-		if (json_data["peliculas_detalle"].is_array()) {
-			for (const auto& entry : json_data["peliculas_detalle"]) {
-				Button* json_data_item = new Button(QString::fromStdString(entry["titulo"]));
-				connect(json_data_item, &Button::clicked, [this]() {
-
-					});
-				movie_list->addWidget(json_data_item);
-			}
+		string date = "UNAVAILABLE";
+		if (json_data.contains("fecha_proyeccion")) {
+			chrono::milliseconds timestamp(json_data["fecha_proyeccion"]["$date"]);
+			chrono::system_clock::time_point timePoint(timestamp);
+			time_t time = chrono::system_clock::to_time_t(timePoint);
+			tm* timeStruct = localtime(&time);
+			char buffer[80];
+			strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeStruct);
+			date = buffer;
 		}
 
+		Label* show_time = new Label(QString::fromStdString("Showtime: " + date));
+		Label* seats_sold = new Label(json_data.contains("asientos_vendidos") ? "Seats Sold: " + QString::fromStdString(json_data["asientos_vendidos"]) : "Seats Sold: UNAVAILABLE");
+		Label* amount_sold = new Label(json_data.contains("dolares_recaudados") ? "$ Sold: " + QString::fromStdString(json_data["dolares_recaudados"]) : "$ Sold: UNAVAILABLE");
+
 		contents->addWidget(name);
-		contents->addWidget(country);
-		contents->addWidget(movie_list);
+		contents->addWidget(show_time);
+		contents->addWidget(seats_sold);
+		contents->addWidget(amount_sold);
 
 		setCentralWidget(contents);
-		setWindowTitle(json_data.contains("nombre") ? QString::fromStdString(json_data["nombre"]) : "Unknown");
+		setWindowTitle(json_data.contains("sala") ? QString::fromStdString(json_data["sala"]) : "UNAVAILABLE");
 	}
 }

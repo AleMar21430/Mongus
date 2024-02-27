@@ -26,27 +26,29 @@ void User_Tab::process(const json& data) {
 		json json_data = data[0];
 
 		Linear_Contents* contents = new Linear_Contents();
-		Label* name = new Label(json_data.contains("nombre") ? "Name: " + QString::fromStdString(json_data["nombre"]) : "Name: Unknown");
+		Label* name = new Label(json_data.contains("nombre_usuario") ? "Name: " + QString::fromStdString(json_data["nombre_usuario"]) : "Name: UNAVAILABLE");
 		name->setFontSize(25);
-		Label* country = new Label(json_data.contains("pais") ? "Country: " + QString::fromStdString(json_data["pais"]) : "Country: Unknown");
+		Label* email = new Label(json_data.contains("correo") ? "EMail: " + QString::fromStdString(json_data["correo"]) : "EMail: UNAVAILABLE");
+		Label* type = new Label(json_data.contains("tipo") ? "User Type: " + QString::fromStdString(json_data["tipo"]) : "User Type: UNAVAILABLE");
 
 		Widget_List* movie_list = new Widget_List("Producers");
 
-		if (json_data["peliculas_detalle"].is_array()) {
-			for (const auto& entry : json_data["peliculas_detalle"]) {
-				Button* json_data_item = new Button(QString::fromStdString(entry["titulo"]));
-				connect(json_data_item, &Button::clicked, [this]() {
-
-					});
-				movie_list->addWidget(json_data_item);
-			}
-		}
+		//if (json_data["peliculas_detalle"].is_array()) {
+		//	for (const auto& entry : json_data["peliculas_detalle"]) {
+		//		Button* json_data_item = new Button(QString::fromStdString(entry["titulo"]));
+		//		connect(json_data_item, &Button::clicked, [this]() {
+		//
+		//			});
+		//		movie_list->addWidget(json_data_item);
+		//	}
+		//}
 
 		contents->addWidget(name);
-		contents->addWidget(country);
-		contents->addWidget(movie_list);
+		contents->addWidget(email);
+		contents->addWidget(type);
+		//contents->addWidget(movie_list);
 
 		setCentralWidget(contents);
-		setWindowTitle(json_data.contains("nombre") ? QString::fromStdString(json_data["nombre"]) : "Unknown");
+		setWindowTitle(json_data.contains("nombre_usuario") ? QString::fromStdString(json_data["nombre_usuario"]) : "UNAVAILABLE");
 	}
 }
